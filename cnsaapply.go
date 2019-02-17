@@ -40,6 +40,7 @@ func main() {
 
 	// Hanle requests
 	// Filter by path
+	e.GET("/login", controller.Login)
 
 	// Start web server
 	e.Start(":80")
