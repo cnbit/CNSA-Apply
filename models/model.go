@@ -2,11 +2,13 @@
 
 import (
 	"crypto/tls"
+	"errors"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -70,9 +72,29 @@ func (c *Holyday) TableName() string {
 //Login 학생 아이디 인증(SALT)
 func Login(studentNumber string, password string) bool {
 	user := User{}
-	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
+	err := db.Table("users").Where("student_number = ?", studentNumber).First(&user).Error
+
+	if err != nil {
+		return false
+	}
 
 	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT)) == nil
+}
+
+func ChangePW(studentNumber string, newPW string) error {
+	if len(newPW) > 30 {
+		err := errors.New("Exceed the length")
+		return err
+	} else if newPW == "" {
+		err := errors.New("PW is empty")
+		return err
+	}
+	user := User{}
+	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(newPW+SALT), 14)
+	user.Password = string(bytes)
+
+	return db.Save(&user).Error
 }
 
 //Tlogin 교사 아이디 인증(cnsanet)
