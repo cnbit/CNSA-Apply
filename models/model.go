@@ -82,7 +82,7 @@ func Login(studentNumber string, password string) bool {
 }
 
 func ChangePW(studentNumber string, newPW string) error {
-	if len(newPW) > 95 {
+	if len(newPW) > 30 {
 		err := errors.New("Exceed the length")
 		return err
 	} else if newPW == "" {
