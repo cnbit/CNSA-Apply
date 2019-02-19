@@ -115,3 +115,23 @@ func Tlogin(loginID string, loginPW string) bool {
 	}
 	return false
 }
+
+// GetTimeTableDays : 페이지에 표시할 5일을 반환
+// 월~금: 금주 월~금을 반환
+// 토~일: 다음주 월~금을 반환
+func GetTimeTableDays() [5]time.Time {
+	var days [5]time.Time
+	now := time.Now()
+
+	if now.Weekday() > 5 {
+		days[0] = now.AddDate(0, 0, 8-int(now.Weekday()))
+	} else {
+		days[0] = now.AddDate(0, 0, 1-int(now.Weekday()))
+	}
+	days[1] = days[0].AddDate(0, 0, 1)
+	days[2] = days[1].AddDate(0, 0, 1)
+	days[3] = days[2].AddDate(0, 0, 1)
+	days[4] = days[3].AddDate(0, 0, 1)
+
+	return days
+}
