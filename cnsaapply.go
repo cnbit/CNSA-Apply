@@ -32,6 +32,7 @@ func main() {
 	// Recover: Recover main thread if it fails
 	e.Use(middleware.Logger(), middleware.Recover())
 
+	// Session 설정
 	store := session.NewCookieStore([]byte("secret"))
 	e.Use(session.Sessions("CASESSION", store))
 

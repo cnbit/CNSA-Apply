@@ -11,8 +11,9 @@ import (
 
 // Index : Main Page
 func Index(c echo.Context) error {
+	// 로그인이 되어 있지 않으면 login page로 redirect
 	session := session.Default(c)
-	if session.Get("loginID") == nil {
+	if session.Get("studentNumber") == nil {
 		return c.Redirect(http.StatusMovedPermanently, "/login")
 	}
 
@@ -26,12 +27,15 @@ func Login(c echo.Context) error {
 
 // LoginPost : Check a Login Data
 func LoginPost(c echo.Context) error {
+	// Login 성공 시
 	if models.Login(c.FormValue("loginID"), c.FormValue("loginPassword")) {
+		// Session에 학번 저장
 		session := session.Default(c)
-		session.Set("loginID", c.FormValue("loginID"))
+		session.Set("studentNumber", c.FormValue("loginID"))
 		session.Save()
 
 		return c.Redirect(http.StatusMovedPermanently, "/")
 	}
+	// Login 실패 시
 	return c.Redirect(http.StatusMovedPermanently, "/login?error=loginFailed")
 }
