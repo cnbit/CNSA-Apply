@@ -69,7 +69,7 @@ func (c *Holyday) TableName() string {
 	return "holydays"
 }
 
-//Login 학생 아이디 인증(SALT)
+// Login 학생 아이디 인증(SALT)
 func Login(studentNumber string, password string) bool {
 	user := User{}
 	err := db.Table("users").Where("student_number = ?", studentNumber).First(&user).Error
@@ -81,23 +81,24 @@ func Login(studentNumber string, password string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT)) == nil
 }
 
-func ChangePW(studentNumber string, newPW string) error {
-	if len(newPW) > 30 {
+// ChangePassword 비밀번호 변경
+func ChangePassword(studentNumber string, newPassword string) error {
+	if len(newPassword) > 30 {
 		err := errors.New("Exceed the length")
 		return err
-	} else if newPW == "" {
+	} else if newPassword == "" {
 		err := errors.New("PW is empty")
 		return err
 	}
 	user := User{}
 	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
-	bytes, _ := bcrypt.GenerateFromPassword([]byte(newPW+SALT), 14)
+	bytes, _ := bcrypt.GenerateFromPassword([]byte(newPassword+SALT), bcrypt.DefaultCost)
 	user.Password = string(bytes)
 
 	return db.Save(&user).Error
 }
 
-//Tlogin 교사 아이디 인증(cnsanet)
+// Tlogin 교사 아이디 인증(cnsanet)
 func Tlogin(loginID string, loginPW string) bool {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
