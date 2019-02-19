@@ -2,11 +2,13 @@
 
 import (
 	"crypto/tls"
+	"errors"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -80,6 +82,13 @@ func Login(studentNumber string, password string) bool {
 }
 
 func ChangePW(studentNumber string, newPW string) error {
+	if len(newPW) > 95 {
+		err := errors.New("Exceed the length")
+		return err
+	} else if newPW == "" {
+		err := errors.New("PW is empty")
+		return err
+	}
 	user := User{}
 	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(newPW+SALT), 14)
