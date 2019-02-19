@@ -30,6 +30,11 @@ func init() {
 	}
 }
 
+// JSONApplyCollection : Json 전송에 사용할 Model
+type JSONApplyCollection struct {
+	Applys []Apply `json:"applys"`
+}
+
 // Apply models
 type Apply struct {
 	StudentNumber string    `gorm:"type:VARCHAR(6); primary_key" json:"student-number"`
@@ -56,6 +61,11 @@ type User struct {
 // TableName of User
 func (c *User) TableName() string {
 	return "users"
+}
+
+// JSONHolydayCollection : Json 전송에 사용할 Model
+type JSONHolydayCollection struct {
+	Holydays []Holyday `json:"holydays"`
 }
 
 // Holyday models
