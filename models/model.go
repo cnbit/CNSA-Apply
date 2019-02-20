@@ -210,3 +210,8 @@ func GetHolydays() []Holyday {
 	db.Table("holydays").Where("date >= ? AND date <= ?", GetTimeTableDays()[0], GetTimeTableDays()[4].Format("2006-01-02")).Find(&holydays)
 	return holydays
 }
+
+// DeleteHolyday 공휴일을 삭제함
+func DeleteHolyday(holyday time.Time) error {
+	return db.Table("holydays").Where("date = ?", holyday).Delete(Holyday{}).Error
+}
