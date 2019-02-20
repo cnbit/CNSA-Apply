@@ -5,6 +5,7 @@ import (
 	"io"
 	"text/template"
 
+	"github.com/ipfans/echo-session"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 )
@@ -31,6 +32,10 @@ func main() {
 	// Recover: Recover main thread if it fails
 	e.Use(middleware.Logger(), middleware.Recover())
 
+	// Session 설정
+	store := session.NewCookieStore([]byte("secret"))
+	e.Use(session.Sessions("CASESSION", store))
+
 	// Set template renderer
 	// We uses standard golang template
 	e.Renderer = t
@@ -40,7 +45,11 @@ func main() {
 
 	// Hanle requests
 	// Filter by path
+	e.GET("/", controller.Index)
+
+	// Login Page
 	e.GET("/login", controller.Login)
+	e.POST("/login", controller.LoginPost)
 
 	// Start web server
 	e.Start(":80")
