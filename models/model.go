@@ -133,10 +133,10 @@ func GetTimeTableDays() [5]time.Time {
 
 	if now.Weekday() > 5 {
 		// 주말일 경우 시작일이 다음주 월요일
-		days[0] = now.AddDate(0, 0, 8-int(now.Weekday()))
+		days[0] = time.Date(now.Year(), now.Month(), now.Day()+(8-int(now.Weekday())), 0, 0, 0, 0, time.Local)
 	} else {
 		// 평일일 경우 시작일이 금주 월요일
-		days[0] = now.AddDate(0, 0, 1-int(now.Weekday()))
+		days[0] = time.Date(now.Year(), now.Month(), now.Day()+(1-int(now.Weekday())), 0, 0, 0, 0, time.Local)
 	}
 	days[1] = days[0].AddDate(0, 0, 1)
 	days[2] = days[1].AddDate(0, 0, 1)
