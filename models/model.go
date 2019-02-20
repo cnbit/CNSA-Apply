@@ -145,3 +145,20 @@ func GetTimeTableDays() [5]time.Time {
 
 	return days
 }
+
+// AddApply 비어있는 좌석에 신청
+func AddApply(studentNumber string, day time.Time, period string, form string, seat string) error {
+	user := User{}
+	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
+	apply := Apply{
+		StudentNumber: studentNumber,
+		Name:          user.Name,
+		Date:          day,
+		Period:        period,
+		Form:          form,
+		Seat:          seat,
+	}
+
+	err := db.Save(&apply).Error
+	return err
+}
