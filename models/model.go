@@ -35,8 +35,8 @@ type Apply struct {
 	StudentNumber string    `gorm:"type:VARCHAR(6); primary_key" json:"student-number"`
 	Name          string    `gorm:"type:VARCHAR(50)" json:"name"`
 	Date          time.Time `gorm:"type:DATE; primary_key; unique_index" json:"date"`
-	Time          string    `gorm:"type:VARCHAR(5); primary_key; unique_index" json:"time"`
-	Type          string    `gorm:"type:VARCHAR(1)" json:"type"`
+	Period        string    `gorm:"type:VARCHAR(5); primary_key; unique_index" json:"time"`
+	Form          string    `gorm:"type:VARCHAR(1)" json:"type"`
 	Seat          string    `gorm:"type:VARCHAR(6); unique_index" json:"seat"`
 }
 
