@@ -35,8 +35,8 @@ type Apply struct {
 	StudentNumber string    `gorm:"type:VARCHAR(6); primary_key" json:"student-number"`
 	Name          string    `gorm:"type:VARCHAR(50)" json:"name"`
 	Date          time.Time `gorm:"type:DATE; primary_key; unique_index" json:"date"`
-	Period        string    `gorm:"type:VARCHAR(5); primary_key; unique_index" json:"time"`
-	Form          string    `gorm:"type:VARCHAR(1)" json:"type"`
+	Period        string    `gorm:"type:VARCHAR(5); primary_key; unique_index" json:"period"`
+	Form          string    `gorm:"type:VARCHAR(1)" json:"form"`
 	Seat          string    `gorm:"type:VARCHAR(6); unique_index" json:"seat"`
 }
 
@@ -84,9 +84,11 @@ func Login(studentNumber string, password string) bool {
 // ChangePassword 비밀번호 변경
 func ChangePassword(studentNumber string, password string, newPassword string) error {
 	if len(newPassword) > 30 {
+		// 새로운 비밀번호의 길이가 길 때
 		err := errors.New("Exceed the length")
 		return err
 	} else if newPassword == "" {
+		// 아무것도 입력하지 않았을 때
 		err := errors.New("NewPassword is empty")
 		return err
 	}
@@ -94,6 +96,7 @@ func ChangePassword(studentNumber string, password string, newPassword string) e
 	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
 
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT)) != nil {
+		// db의 현재 비밀번호와 입력된 현재 비밀번호가 일치하지 않을 때
 		return errors.New("Password is incorrect")
 	}
 
