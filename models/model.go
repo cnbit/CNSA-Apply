@@ -82,16 +82,21 @@ func Login(studentNumber string, password string) bool {
 }
 
 // ChangePassword 비밀번호 변경
-func ChangePassword(studentNumber string, newPassword string) error {
+func ChangePassword(studentNumber string, password string, newPassword string) error {
 	if len(newPassword) > 30 {
 		err := errors.New("Exceed the length")
 		return err
 	} else if newPassword == "" {
-		err := errors.New("PW is empty")
+		err := errors.New("NewPassword is empty")
 		return err
 	}
 	user := User{}
 	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
+
+	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT)) != nil {
+		return errors.New("Password is incorrect")
+	}
+
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(newPassword+SALT), bcrypt.DefaultCost)
 	user.Password = string(bytes)
 
