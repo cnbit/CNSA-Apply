@@ -168,3 +168,31 @@ func AddApply(studentNumber string, day time.Time, period string, form string, s
 
 	return err
 }
+
+// DeleteApply 좌석 신청 정보 삭제
+// 요청 시간이 시작 이후일 경우 에러 리턴
+func DeleteApply(studentNumber string, day time.Time, period string) error {
+	// studyDay: 신청한 면학시간
+	var studyDay time.Time
+	if period == "7" {
+		// 7교시
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 3, 30, 0, 0, time.Local)
+	} else if period == "CAS" {
+		// CAS
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 4, 50, 0, 0, time.Local)
+	} else if period == "EP1" {
+		// EP1
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 7, 20, 0, 0, time.Local)
+	} else if period == "EP2" {
+		// EP2
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 9, 00, 0, 0, time.Local)
+	}
+
+	if time.Now().After(studyDay) {
+		// 지금이 면학신청한 시간 이후면 Error 반환
+		return errors.New("It's already over")
+	}
+
+	err := db.Table("applys").Where("student_number = ? AND date = ? AND period = ?", studentNumber, day.Format("2006-01-02"), period).Delete(Apply{}).Error
+	return err
+}
