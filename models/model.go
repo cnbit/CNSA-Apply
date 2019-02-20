@@ -169,6 +169,13 @@ func AddApply(studentNumber string, day time.Time, period string, form string, s
 	return err
 }
 
+// GetApplysByStudentNumber 페이지에 표시될 5일에 해당하는 신청내역을 가져옴
+func GetApplysByStudentNumber(studentNumber string) []Apply {
+	applys := []Apply{}
+	db.Table("applys").Where("student_number = ? AND date >= ?", studentNumber, GetTimeTableDays()[0]).Find(&applys)
+	return applys
+}
+
 // DeleteApply 좌석 신청 정보 삭제
 // 요청 시간이 시작 이후일 경우 에러 리턴
 func DeleteApply(studentNumber string, day time.Time, period string) error {
