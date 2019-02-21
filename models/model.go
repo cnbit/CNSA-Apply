@@ -153,12 +153,10 @@ func GetTimeTableDays() [5]time.Time {
 // AddApply 비어있는 좌석에 신청
 // 같은 사람이 같은 시간에 신청은 선택할 때 방지
 // 발생 가능한 오류는 비슷한 시간대에 동일한 좌석에 신청
-func AddApply(studentNumber string, day time.Time, period string, form string, seat string) error {
-	user := User{}
-	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
+func AddApply(studentNumber string, name string, day time.Time, period string, form string, seat string) error {
 	apply := Apply{
 		StudentNumber: studentNumber,
-		Name:          user.Name,
+		Name:          name,
 		Date:          day,
 		Period:        period,
 		Form:          form,
