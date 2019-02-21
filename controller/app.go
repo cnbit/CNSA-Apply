@@ -9,14 +9,21 @@ import (
 	"github.com/labstack/echo"
 )
 
+// AuthAPI 로그인 인증 middleware
+func AuthAPI(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		// 로그인이 되어 있지 않으면 login page로 redirect
+		session := session.Default(c)
+		if session.Get("studentNumber") == nil {
+			return c.Redirect(http.StatusMovedPermanently, "/login")
+		}
+
+		return next(c)
+	}
+}
+
 // Index : Main Page
 func Index(c echo.Context) error {
-	// 로그인이 되어 있지 않으면 login page로 redirect
-	session := session.Default(c)
-	if session.Get("studentNumber") == nil {
-		return c.Redirect(http.StatusMovedPermanently, "/login")
-	}
-
 	return c.Render(http.StatusOK, "index", nil)
 }
 

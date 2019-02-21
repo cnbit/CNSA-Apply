@@ -8,8 +8,8 @@ import (
 	"github.com/labstack/echo"
 )
 
-// AuthAPI 로그인 인증 middleware
-func AuthAPI(next echo.HandlerFunc) echo.HandlerFunc {
+// AdminAuthAPI 로그인 인증 middleware
+func AdminAuthAPI(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// 로그인이 되어 있지 않으면 login page로 redirect
 		session := session.Default(c)

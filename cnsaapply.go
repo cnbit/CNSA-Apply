@@ -47,7 +47,7 @@ func main() {
 	// Filter by path
 	// 학생 페이지 =====================================
 	// 메인 페이지
-	e.GET("/", controller.Index)
+	e.GET("/", controller.Index, controller.AuthAPI)
 
 	// Login Page
 	e.GET("/login", controller.Login)
@@ -63,7 +63,7 @@ func main() {
 	e.GET("/admin/logout", controller.AdminLogout)
 
 	a := e.Group("/admin")
-	a.Use(controller.AuthAPI)
+	a.Use(controller.AdminAuthAPI)
 
 	// 메인 페이지
 	a.GET("/", controller.AdminIndex)
