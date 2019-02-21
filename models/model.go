@@ -133,10 +133,10 @@ func GetTimeTableDays() [5]time.Time {
 
 	if now.Weekday() > 5 {
 		// 주말일 경우 시작일이 다음주 월요일
-		days[0] = now.AddDate(0, 0, 8-int(now.Weekday()))
+		days[0] = time.Date(now.Year(), now.Month(), now.Day()+(8-int(now.Weekday())), 0, 0, 0, 0, time.Local)
 	} else {
 		// 평일일 경우 시작일이 금주 월요일
-		days[0] = now.AddDate(0, 0, 1-int(now.Weekday()))
+		days[0] = time.Date(now.Year(), now.Month(), now.Day()+(1-int(now.Weekday())), 0, 0, 0, 0, time.Local)
 	}
 	days[1] = days[0].AddDate(0, 0, 1)
 	days[2] = days[1].AddDate(0, 0, 1)
@@ -167,4 +167,51 @@ func AddApply(studentNumber string, day time.Time, period string, form string, s
 	}
 
 	return err
+}
+
+// GetApplysByStudentNumber 페이지에 표시될 5일에 해당하는 신청내역을 가져옴
+func GetApplysByStudentNumber(studentNumber string) []Apply {
+	applys := []Apply{}
+	db.Table("applys").Where("student_number = ? AND date >= ?", studentNumber, GetTimeTableDays()[0]).Find(&applys)
+	return applys
+}
+
+// DeleteApply 좌석 신청 정보 삭제
+// 요청 시간이 시작 이후일 경우 에러 리턴
+func DeleteApply(studentNumber string, day time.Time, period string) error {
+	// studyDay: 신청한 면학시간
+	var studyDay time.Time
+	if period == "7" {
+		// 7교시
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 3, 30, 0, 0, time.Local)
+	} else if period == "CAS" {
+		// CAS
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 4, 50, 0, 0, time.Local)
+	} else if period == "EP1" {
+		// EP1
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 7, 20, 0, 0, time.Local)
+	} else if period == "EP2" {
+		// EP2
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 9, 00, 0, 0, time.Local)
+	}
+
+	if time.Now().After(studyDay) {
+		// 지금이 면학신청한 시간 이후면 Error 반환
+		return errors.New("It's already over")
+	}
+
+	err := db.Table("applys").Where("student_number = ? AND date = ? AND period = ?", studentNumber, day.Format("2006-01-02"), period).Delete(Apply{}).Error
+	return err
+}
+
+// GetHolydays 페이지에 표시될 5일에 해당하는 공휴일 정보를 가져옴
+func GetHolydays() []Holyday {
+	holydays := []Holyday{}
+	db.Table("holydays").Where("date >= ? AND date <= ?", GetTimeTableDays()[0], GetTimeTableDays()[4].Format("2006-01-02")).Find(&holydays)
+	return holydays
+}
+
+// DeleteHolyday 공휴일을 삭제함
+func DeleteHolyday(holyday time.Time) error {
+	return db.Table("holydays").Where("date = ?", holyday).Delete(Holyday{}).Error
 }
