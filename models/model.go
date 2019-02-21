@@ -204,8 +204,8 @@ func DeleteApply(studentNumber string, day time.Time, period string) error {
 	return err
 }
 
-// GetHolydays 페이지에 표시될 5일에 해당하는 공휴일 정보를 가져옴
-func GetHolydays() []Holyday {
+// GetTimeTableHolydays 페이지에 표시될 5일에 해당하는 공휴일 정보를 가져옴
+func GetTimeTableHolydays() []Holyday {
 	holydays := []Holyday{}
 	db.Table("holydays").Where("date >= ? AND date <= ?", GetTimeTableDays()[0], GetTimeTableDays()[4].Format("2006-01-02")).Find(&holydays)
 	return holydays
@@ -245,4 +245,12 @@ func GetApplys(day time.Time, period string, form string) []Apply {
 	db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Find(&applys)
 
 	return applys
+}
+
+// GetHolydays 모든 공휴일 정보 가져오기
+func GetHolydays() []Holyday {
+	holydays := []Holyday{}
+	db.Table("holydays").Find(&holydays)
+
+	return holydays
 }
