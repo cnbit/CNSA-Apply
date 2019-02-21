@@ -218,10 +218,9 @@ func DeleteHolyday(holyday time.Time) error {
 
 // GetApplyMount 특정 시간의 신청 수를 반환함
 func GetApplyMount(day time.Time, period string, form string) int {
-	var cnt int
-	cnt = 0
-	db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Count(&cnt)
-	return cnt
+	var count int
+	db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Count(&count)
+	return count
 }
 
 // AddHolyday 공휴일 추가
