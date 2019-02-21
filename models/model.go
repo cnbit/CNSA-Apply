@@ -110,8 +110,8 @@ func ChangePassword(studentNumber string, password string, newPassword string) e
 	return db.Save(&user).Error
 }
 
-// Tlogin 교사 아이디 인증(cnsanet)
-func Tlogin(loginID string, loginPW string) bool {
+// TcrLogin 교사 아이디 인증(cnsanet)
+func TcrLogin(loginID string, loginPW string) bool {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
