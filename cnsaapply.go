@@ -46,6 +46,7 @@ func main() {
 	// Hanle requests
 	// Filter by path
 	// 학생 페이지 =====================================
+	// 메인 페이지
 	e.GET("/", controller.Index)
 
 	// Login Page
@@ -53,6 +54,19 @@ func main() {
 	e.POST("/login", controller.LoginPost)
 	// Logout
 	e.GET("/logout", controller.Logout)
+
+	// 교사 페이지 =====================================
+	// Login Page
+	e.GET("/admin/login", controller.AdminLogin)
+	e.POST("/admin/login", controller.AdminLoginPost)
+	// Logout
+	e.GET("/admin/logout", controller.AdminLogout)
+
+	a := e.Group("/admin")
+	a.Use(controller.AuthAPI)
+
+	// 메인 페이지
+	a.GET("/", controller.AdminIndex)
 
 	// Start web server
 	e.Start(":80")
