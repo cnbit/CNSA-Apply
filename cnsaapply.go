@@ -43,7 +43,7 @@ func main() {
 	// Set static serve files
 	e.Static("/assets", "static")
 
-	// Hanle requests
+	// Handle requests
 	// Filter by path
 	// 학생 페이지 =====================================
 	// 메인 페이지
