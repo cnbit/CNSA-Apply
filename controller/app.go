@@ -27,15 +27,19 @@ func Login(c echo.Context) error {
 
 // LoginPost : Check a Login Data
 func LoginPost(c echo.Context) error {
+	isSuccessed, name := models.Login(c.FormValue("loginID"), c.FormValue("loginPassword"))
+
 	// Login 성공 시
-	if models.Login(c.FormValue("loginID"), c.FormValue("loginPassword")) {
+	if isSuccessed {
 		// Session에 학번 저장
 		session := session.Default(c)
 		session.Set("studentNumber", c.FormValue("loginID"))
+		session.Set("name", name)
 		session.Save()
 
 		return c.Redirect(http.StatusMovedPermanently, "/")
 	}
+
 	// Login 실패 시
 	return c.Redirect(http.StatusMovedPermanently, "/login?error=loginFailed")
 }
