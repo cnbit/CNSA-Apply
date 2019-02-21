@@ -238,3 +238,11 @@ func AddHolyday(day time.Time, name string) error {
 
 	return db.Save(&holyday).Error
 }
+
+// GetApplys 신청내역 확인
+func GetApplys(day time.Time, period string, form string) []Apply {
+	applys := []Apply{}
+	db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Find(&applys)
+
+	return applys
+}
