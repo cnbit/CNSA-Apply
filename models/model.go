@@ -227,3 +227,14 @@ func GetApplyMount(day time.Time, period string, form string) int {
 	}
 	return cnt
 }
+
+// AddHolyday 공휴일 추가
+// error 반환
+func AddHolyday(day time.Time, name string) error {
+	holyday := Holyday{
+		Date: day,
+		Name: name,
+	}
+
+	return db.Save(&holyday).Error
+}
