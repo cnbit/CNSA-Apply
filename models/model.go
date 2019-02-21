@@ -162,7 +162,7 @@ func AddApply(studentNumber string, day time.Time, period string, form string, s
 	}
 
 	err := db.Save(&apply).Error
-	if err != errors.New("Error 1062: Duplicate entry '"+seat+"-"+period+"-"+day.Format("2006-01-02")+"' for key 'seat'") {
+	if err.Error()[:9] != "Error 1062" {
 		err = errors.New("The seat has been applied")
 	}
 
@@ -240,9 +240,8 @@ func GetApplys(day time.Time, period string, form string) []Apply {
 
 // GetHolydays 모든 공휴일 정보 가져오기
 func GetHolydays() []Holyday {
-	now := time.Now()
 	holydays := []Holyday{}
-	db.Table("holydays").Where("date >= ?", now.Format("2006-01-02")).Find(&holydays)
+	db.Table("holydays").Where("date >= ?", time.Now().Format("2006-01-02")).Find(&holydays)
 
 	return holydays
 }
