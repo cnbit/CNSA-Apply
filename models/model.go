@@ -227,12 +227,7 @@ func GetApplyMount(day time.Time, period string, form string) int {
 // AddHolyday 공휴일 추가
 // error 반환
 func AddHolyday(day time.Time, name string) error {
-	holyday := Holyday{
-		Date: day,
-		Name: name,
-	}
-
-	return db.Save(&holyday).Error
+	return db.Save(&Holyday{Date: day, Name: name}).Error
 }
 
 // GetApplys 신청내역 확인
