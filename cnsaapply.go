@@ -45,11 +45,14 @@ func main() {
 
 	// Hanle requests
 	// Filter by path
+	// 학생 페이지 =====================================
 	e.GET("/", controller.Index)
 
 	// Login Page
 	e.GET("/login", controller.Login)
 	e.POST("/login", controller.LoginPost)
+	// Logout
+	e.GET("/logout", controller.Logout)
 
 	// Start web server
 	e.Start(":80")

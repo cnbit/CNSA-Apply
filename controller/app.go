@@ -43,3 +43,14 @@ func LoginPost(c echo.Context) error {
 	// Login 실패 시
 	return c.Redirect(http.StatusMovedPermanently, "/login?error=loginFailed")
 }
+
+// Logout : 로그아웃 - 세션 초기화
+func Logout(c echo.Context) error {
+	// Session 초기화
+	session := session.Default(c)
+	session.Clear()
+	session.Save()
+
+	// 로그인 페이지로 빠이빠이
+	return c.Redirect(http.StatusMovedPermanently, "/login")
+}
