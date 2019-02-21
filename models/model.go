@@ -249,8 +249,9 @@ func GetApplys(day time.Time, period string, form string) []Apply {
 
 // GetHolydays 모든 공휴일 정보 가져오기
 func GetHolydays() []Holyday {
+	now := time.Now()
 	holydays := []Holyday{}
-	db.Table("holydays").Find(&holydays)
+	db.Table("holydays").Where("date >= ?", now.Format("2006-01-02")).Find(&holydays)
 
 	return holydays
 }
