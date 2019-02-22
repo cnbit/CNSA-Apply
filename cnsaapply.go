@@ -55,6 +55,9 @@ func main() {
 	// Logout
 	e.GET("/logout", controller.Logout)
 
+	// [API]공휴일 정보 가져오기
+	e.GET("/api/getHolydays", controller.GetHolydays())
+
 	// 교사 페이지 =====================================
 	// Login Page
 	e.GET("/admin/login", controller.AdminLogin)
