@@ -62,7 +62,7 @@ func Logout(c echo.Context) error {
 	return c.Redirect(http.StatusMovedPermanently, "/login")
 }
 
-// GetHolydays 공휴일 정보 가져오기
+// GetHolydays : 공휴일 정보 가져오기
 func GetHolydays() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		//json으로 5일치 공휴일 반환
