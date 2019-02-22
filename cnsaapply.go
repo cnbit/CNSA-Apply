@@ -55,6 +55,8 @@ func main() {
 	// Logout
 	e.GET("/logout", controller.Logout)
 
+	// ChangePassword
+	e.GET("changePassword", controller.ChangePassword, controller.AuthAPI)
 	// [API]공휴일 정보 가져오기
 	e.GET("/api/getHolydays", controller.GetHolydays(), controller.AuthAPI)
 
