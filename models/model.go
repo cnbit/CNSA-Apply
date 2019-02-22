@@ -37,6 +37,7 @@ type Apply struct {
 	Date          time.Time `gorm:"type:DATE; primary_key; unique_index" json:"date"`
 	Period        string    `gorm:"type:VARCHAR(5); primary_key; unique_index" json:"period"`
 	Form          string    `gorm:"type:VARCHAR(1)" json:"form"`
+	Area          string    `gorm:"type:VARCHAR(1)" json:"area"`
 	Seat          string    `gorm:"type:VARCHAR(6); unique_index" json:"seat"`
 }
 
