@@ -43,13 +43,30 @@ func main() {
 	// Set static serve files
 	e.Static("/assets", "static")
 
-	// Hanle requests
+	// Handle requests
 	// Filter by path
-	e.GET("/", controller.Index)
+	// 학생 페이지 =====================================
+	// 메인 페이지
+	e.GET("/", controller.Index, controller.AuthAPI)
 
 	// Login Page
 	e.GET("/login", controller.Login)
 	e.POST("/login", controller.LoginPost)
+	// Logout
+	e.GET("/logout", controller.Logout)
+
+	// 교사 페이지 =====================================
+	// Login Page
+	e.GET("/admin/login", controller.AdminLogin)
+	e.POST("/admin/login", controller.AdminLoginPost)
+	// Logout
+	e.GET("/admin/logout", controller.AdminLogout)
+
+	a := e.Group("/admin")
+	a.Use(controller.AdminAuthAPI)
+
+	// 메인 페이지
+	a.GET("/", controller.AdminIndex)
 
 	// Start web server
 	e.Start(":80")

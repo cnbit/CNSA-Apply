@@ -70,15 +70,19 @@ func (c *Holyday) TableName() string {
 }
 
 // Login 학생 아이디 인증(SALT)
-func Login(studentNumber string, password string) bool {
+func Login(studentNumber string, password string) (bool, string) {
 	user := User{}
 	err := db.Table("users").Where("student_number = ?", studentNumber).First(&user).Error
-
 	if err != nil {
-		return false
+		return false, ""
 	}
 
-	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT)) == nil
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT))
+	if err != nil {
+		return false, ""
+	}
+
+	return true, user.Name
 }
 
 // ChangePassword 비밀번호 변경
@@ -106,8 +110,8 @@ func ChangePassword(studentNumber string, password string, newPassword string) e
 	return db.Save(&user).Error
 }
 
-// Tlogin 교사 아이디 인증(cnsanet)
-func Tlogin(loginID string, loginPW string) bool {
+// TcrLogin 교사 아이디 인증(cnsanet)
+func TcrLogin(loginID string, loginPW string) bool {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
@@ -149,12 +153,10 @@ func GetTimeTableDays() [5]time.Time {
 // AddApply 비어있는 좌석에 신청
 // 같은 사람이 같은 시간에 신청은 선택할 때 방지
 // 발생 가능한 오류는 비슷한 시간대에 동일한 좌석에 신청
-func AddApply(studentNumber string, day time.Time, period string, form string, seat string) error {
-	user := User{}
-	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
+func AddApply(studentNumber string, name string, day time.Time, period string, form string, seat string) error {
 	apply := Apply{
 		StudentNumber: studentNumber,
-		Name:          user.Name,
+		Name:          name,
 		Date:          day,
 		Period:        period,
 		Form:          form,
