@@ -128,28 +128,6 @@ func TcrLogin(loginID string, loginPW string) bool {
 	return false
 }
 
-// GetTimeTableDays : 페이지에 표시할 5일을 반환
-// 월~금: 금주 월~금을 반환
-// 토~일: 다음주 월~금을 반환
-func GetTimeTableDays() [5]time.Time {
-	var days [5]time.Time
-	now := time.Now()
-
-	if now.Weekday() > 5 {
-		// 주말일 경우 시작일이 다음주 월요일
-		days[0] = time.Date(now.Year(), now.Month(), now.Day()+(8-int(now.Weekday())), 0, 0, 0, 0, time.Local)
-	} else {
-		// 평일일 경우 시작일이 금주 월요일
-		days[0] = time.Date(now.Year(), now.Month(), now.Day()+(1-int(now.Weekday())), 0, 0, 0, 0, time.Local)
-	}
-	days[1] = days[0].AddDate(0, 0, 1)
-	days[2] = days[1].AddDate(0, 0, 1)
-	days[3] = days[2].AddDate(0, 0, 1)
-	days[4] = days[3].AddDate(0, 0, 1)
-
-	return days
-}
-
 // AddApply 비어있는 좌석에 신청
 // 같은 사람이 같은 시간에 신청은 선택할 때 방지
 // 발생 가능한 오류는 비슷한 시간대에 동일한 좌석에 신청
@@ -169,13 +147,6 @@ func AddApply(studentNumber string, name string, day time.Time, period string, f
 	}
 
 	return err
-}
-
-// GetApplysByStudentNumber 페이지에 표시될 5일에 해당하는 신청내역을 가져옴
-func GetApplysByStudentNumber(studentNumber string) []Apply {
-	applys := []Apply{}
-	db.Table("applys").Where("student_number = ? AND date >= ?", studentNumber, GetTimeTableDays()[0]).Find(&applys)
-	return applys
 }
 
 // DeleteApply 좌석 신청 정보 삭제
@@ -206,11 +177,10 @@ func DeleteApply(studentNumber string, day time.Time, period string) error {
 	return err
 }
 
-// GetTimeTableHolydays 페이지에 표시될 5일에 해당하는 공휴일 정보를 가져옴
-func GetTimeTableHolydays() []Holyday {
-	holydays := []Holyday{}
-	db.Table("holydays").Where("date >= ? AND date <= ?", GetTimeTableDays()[0], GetTimeTableDays()[4].Format("2006-01-02")).Find(&holydays)
-	return holydays
+// AddHolyday 공휴일 추가
+// error 반환
+func AddHolyday(day time.Time, name string) error {
+	return db.Save(&Holyday{Date: day, Name: name}).Error
 }
 
 // DeleteHolyday 공휴일을 삭제함
@@ -218,17 +188,26 @@ func DeleteHolyday(holyday time.Time) error {
 	return db.Table("holydays").Where("date = ?", holyday).Delete(Holyday{}).Error
 }
 
-// GetApplyMount 특정 시간의 신청 수를 반환함
-func GetApplyMount(day time.Time, period string, form string) int {
-	var count int
-	db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Count(&count)
-	return count
-}
+// GetTimeTableDays : 페이지에 표시할 5일을 반환
+// 월~금: 금주 월~금을 반환
+// 토~일: 다음주 월~금을 반환
+func GetTimeTableDays() [5]time.Time {
+	var days [5]time.Time
+	now := time.Now()
 
-// AddHolyday 공휴일 추가
-// error 반환
-func AddHolyday(day time.Time, name string) error {
-	return db.Save(&Holyday{Date: day, Name: name}).Error
+	if now.Weekday() > 5 {
+		// 주말일 경우 시작일이 다음주 월요일
+		days[0] = time.Date(now.Year(), now.Month(), now.Day()+(8-int(now.Weekday())), 0, 0, 0, 0, time.Local)
+	} else {
+		// 평일일 경우 시작일이 금주 월요일
+		days[0] = time.Date(now.Year(), now.Month(), now.Day()+(1-int(now.Weekday())), 0, 0, 0, 0, time.Local)
+	}
+	days[1] = days[0].AddDate(0, 0, 1)
+	days[2] = days[1].AddDate(0, 0, 1)
+	days[3] = days[2].AddDate(0, 0, 1)
+	days[4] = days[3].AddDate(0, 0, 1)
+
+	return days
 }
 
 // GetApplys 신청내역 확인
@@ -239,10 +218,31 @@ func GetApplys(day time.Time, period string, form string) []Apply {
 	return applys
 }
 
+// GetApplysByStudentNumber 페이지에 표시될 5일에 해당하는 신청내역을 가져옴
+func GetApplysByStudentNumber(studentNumber string) []Apply {
+	applys := []Apply{}
+	db.Table("applys").Where("student_number = ? AND date >= ?", studentNumber, GetTimeTableDays()[0]).Find(&applys)
+	return applys
+}
+
+// GetApplyMount 특정 시간의 신청 수를 반환함
+func GetApplyMount(day time.Time, period string, form string) int {
+	var count int
+	db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Count(&count)
+	return count
+}
+
 // GetHolydays 모든 공휴일 정보 가져오기
 func GetHolydays() []Holyday {
 	holydays := []Holyday{}
 	db.Table("holydays").Where("date >= ?", time.Now().Format("2006-01-02")).Find(&holydays)
 
+	return holydays
+}
+
+// GetTimeTableHolydays 페이지에 표시될 5일에 해당하는 공휴일 정보를 가져옴
+func GetTimeTableHolydays() []Holyday {
+	holydays := []Holyday{}
+	db.Table("holydays").Where("date >= ? AND date <= ?", GetTimeTableDays()[0], GetTimeTableDays()[4].Format("2006-01-02")).Find(&holydays)
 	return holydays
 }
