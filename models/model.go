@@ -234,7 +234,7 @@ func DeleteApply(studentNumber string, day time.Time, period string) error {
 
 // AddHolyday 공휴일 추가
 func AddHolyday(day time.Time, name string) error {
-	return db.Save(&Holyday{Date: day, Name: name}).Error
+	return db.Create(&Holyday{Date: day, Name: name}).Error
 }
 
 // GetTimeTableHolydays 페이지에 표시될 5일에 해당하는 공휴일 정보를 가져옴
