@@ -35,7 +35,7 @@ type Apply struct {
 	StudentNumber string    `gorm:"type:VARCHAR(6); primary_key" json:"student-number"`
 	Name          string    `gorm:"type:VARCHAR(50)" json:"name"`
 	Date          time.Time `gorm:"type:DATE; primary_key; unique_index" json:"date"`
-	Period        string    `gorm:"type:VARCHAR(5); primary_key; unique_index" json:"period"`
+	Period        string    `gorm:"type:VARCHAR(6); primary_key; unique_index" json:"period"`
 	Form          string    `gorm:"type:VARCHAR(1)" json:"form"`
 	Area          string    `gorm:"type:VARCHAR(1)" json:"area"`
 	Seat          string    `gorm:"type:VARCHAR(6); unique_index" json:"seat"`
@@ -165,9 +165,11 @@ func AddApply(studentNumber string, name string, day time.Time, period string, f
 		Seat:          seat,
 	}
 
-	err := db.Save(&apply).Error
-	if err.Error()[:9] != "Error 1062" {
-		err = errors.New("The seat has been applied")
+	err := db.Create(&apply).Error
+	if err != nil {
+		if err.Error()[:9] != "Error 1062" {
+			err = errors.New("The seat has been applied")
+		}
 	}
 
 	return err

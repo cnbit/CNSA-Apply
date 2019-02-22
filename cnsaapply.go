@@ -55,6 +55,10 @@ func main() {
 	// Logout
 	e.GET("/logout", controller.Logout)
 
+	// 학생 API =======================================
+	// 신청하기
+	e.POST("/api/apply", controller.ApplyAPI)
+
 	// 교사 페이지 =====================================
 	// Login Page
 	e.GET("/admin/login", controller.AdminLogin)
@@ -67,6 +71,8 @@ func main() {
 
 	// 메인 페이지
 	a.GET("/", controller.AdminIndex)
+
+	// 교사 API =======================================
 
 	// Start web server
 	e.Start(":80")

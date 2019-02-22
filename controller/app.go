@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"net/http"
-
 	"CNSA-Apply/models"
+	"net/http"
+	"time"
 
 	session "github.com/ipfans/echo-session"
 	"github.com/labstack/echo"
@@ -20,11 +20,6 @@ func AuthAPI(next echo.HandlerFunc) echo.HandlerFunc {
 
 		return next(c)
 	}
-}
-
-// Index : Main Page
-func Index(c echo.Context) error {
-	return c.Render(http.StatusOK, "index", nil)
 }
 
 // Login : Login Page
@@ -60,4 +55,25 @@ func Logout(c echo.Context) error {
 
 	// 로그인 페이지로 빠이빠이
 	return c.Redirect(http.StatusMovedPermanently, "/login")
+}
+
+// Index : Main Page
+func Index(c echo.Context) error {
+	return c.Render(http.StatusOK, "index", nil)
+}
+
+// ApplyAPI 신청정보 등록
+func ApplyAPI(c echo.Context) error {
+	session := session.Default(c)
+	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+
+	err = models.AddApply(session.Get("studentNumber").(string), session.Get("name").(string), day, c.FormValue("period"), c.FormValue("form"), c.FormValue("area"), c.FormValue("seat"))
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+
+	return c.String(http.StatusOK, "success")
 }
