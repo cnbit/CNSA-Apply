@@ -62,6 +62,9 @@ func Logout(c echo.Context) error {
 	return c.Redirect(http.StatusMovedPermanently, "/login")
 }
 
+// ChangePassword : ChangePassword page
+func ChangePassword(c echo.Context) error {
+	return c.Render(http.StatusOK, "changePassword", nil)
 }
 
 // GetHolydays : 공휴일 정보 가져오기
