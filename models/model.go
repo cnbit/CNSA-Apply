@@ -197,8 +197,8 @@ func GetApplyMount(day time.Time, period string, form string) int {
 	return count
 }
 
-// GetApplyMountByArea 특정 시간, 구역의 신청 수를 반환함
-func GetApplyMountByArea(day time.Time, period string, form string, area string) int {
+// GetApplyMountOfArea 특정 시간, 구역의 신청 수를 반환함
+func GetApplyMountOfArea(day time.Time, period string, form string, area string) int {
 	var count int
 	db.Table("applys").Where("date = ? AND period = ? AND form = ? AND area = ?", day.Format("2006-01-02"), period, form, area).Count(&count)
 	return count
