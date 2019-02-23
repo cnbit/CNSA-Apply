@@ -67,7 +67,8 @@ func main() {
 	e.GET("/api/getApplyMountOfArea", controller.GetApplyMountOfAreaAPI, controller.AuthAPI)
 	// 신청 취소하기
 	e.POST("/api/cancelApply", controller.CancelApplyAPI, controller.AuthAPI)
-	// [API]공휴일 정보 가져오기
+
+	// 공휴일 정보 가져오기
 	e.GET("/api/getHolydays", controller.GetHolydaysAPI, controller.AuthAPI)
 
 	// ================ 교사 페이지 ================
