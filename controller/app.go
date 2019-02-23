@@ -119,20 +119,20 @@ func ChangePassword(c echo.Context) error {
 func ChangePasswordPost(c echo.Context) error {
 	// 새로운 비밀번호와 새로운 비밀번호 확인이 다를 때
 	if c.FormValue("newPassword") != c.FormValue("newPasswordCheck") {
-		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?error=Check")
+		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status=Check")
 	}
 	session := session.Default(c)
 	err := models.ChangePassword(session.Get("studentNumber").(string), c.FormValue("loginPassword"), c.FormValue("newPassword"))
-	// 비번 변경 성공
-	if err == nil {
-		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?error=nil")
+	// 비번 변경 실패
+	if err != nil {
+		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status="+err.Error())
 	}
-	// 비밀번호 변경 실패
-	errr := err.Error()
-	return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?error="+errr)
+	// 비밀번호 변경 성공
+	return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status=nil")
+
 }
 
-// GetHolydays : 공휴일 정보 가져오기 API
+// GetHolydaysAPI : 공휴일 정보 가져오기 API
 func GetHolydaysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetTimeTableHolydays())
 }
