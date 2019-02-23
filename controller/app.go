@@ -84,3 +84,19 @@ func GetApplysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetApplysByStudentNumber(session.Default(c).Get("studentNumber").(string)))
 }
 
+// CancelApplyAPI 신청 취소
+func CancelApplyAPI(c echo.Context) error {
+
+	session := session.Default(c)
+	day, err := time.Parse("2006-01-02", c.FormValue("date"))
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+
+	err = models.DeleteApply(session.Get("studentNumber").(string), day, c.FormValue("period"))
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+
+	return c.String(http.StatusOK, "success")
+}
