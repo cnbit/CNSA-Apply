@@ -75,6 +75,3 @@ func AdminCancelHolydayAPI(c echo.Context) error {
 
 	return c.String(http.StatusOK, "success")
 }
-	fmt.Println(c.QueryParam("period"), c.QueryParam("form"), c.QueryParam("area"))
-	return c.JSON(http.StatusOK, models.GetApplys(time.Now(), c.QueryParam("period"), c.QueryParam("form"), c.QueryParam("area")))
-}
