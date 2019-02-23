@@ -132,7 +132,7 @@ func ChangePasswordPost(c echo.Context) error {
 	return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?error="+errr)
 }
 
-// GetHolydays : 공휴일 정보 가져오기
-func GetHolydays(c echo.Context) error {
+// GetHolydays : 공휴일 정보 가져오기 API
+func GetHolydaysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetTimeTableHolydays())
 }
