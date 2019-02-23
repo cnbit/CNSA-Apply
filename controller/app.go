@@ -114,3 +114,20 @@ func CancelApplyAPI(c echo.Context) error {
 func ChangePassword(c echo.Context) error {
 	return c.Render(http.StatusOK, "changePassword", nil)
 }
+
+// ChangePasswordPost : Check a Password and change
+func ChangePasswordPost(c echo.Context) error {
+	// 새로운 비밀번호와 새로운 비밀번호 확인이 다를 때
+	if c.FormValue("newPassword") != c.FormValue("newPasswordCheck") {
+		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?error=Check")
+	}
+	session := session.Default(c)
+	err := models.ChangePassword(session.Get("studentNumber").(string), c.FormValue("loginPassword"), c.FormValue("newPassword"))
+	// 비번 변경 성공
+	if err == nil {
+		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?error=nil")
+	}
+	// 비밀번호 변경 실패
+	errr := err.Error()
+	return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?error="+errr)
+}
