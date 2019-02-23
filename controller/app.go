@@ -29,7 +29,7 @@ func Login(c echo.Context) error {
 
 // LoginPost : Check a Login Data
 func LoginPost(c echo.Context) error {
-	isSuccessed, name := models.Login(c.FormValue("loginID"), c.FormValue("loginPassword"))
+	isSuccessed, name, gender := models.Login(c.FormValue("loginID"), c.FormValue("loginPassword"))
 
 	// Login 성공 시
 	if isSuccessed {
@@ -37,6 +37,7 @@ func LoginPost(c echo.Context) error {
 		session := session.Default(c)
 		session.Set("studentNumber", c.FormValue("loginID"))
 		session.Set("name", name)
+		session.Set("gender", gender)
 		session.Save()
 
 		return c.Redirect(http.StatusMovedPermanently, "/")

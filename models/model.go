@@ -71,19 +71,19 @@ func (c *Holyday) TableName() string {
 }
 
 // Login 학생 아이디 인증(SALT)
-func Login(studentNumber string, password string) (bool, string) {
+func Login(studentNumber string, password string) (bool, string, int) {
 	user := User{}
 	err := db.Table("users").Where("student_number = ?", studentNumber).First(&user).Error
 	if err != nil {
-		return false, ""
+		return false, "", -1
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT))
 	if err != nil {
-		return false, ""
+		return false, "", -1
 	}
 
-	return true, user.Name
+	return true, user.Name, user.Gender
 }
 
 // ChangePassword 비밀번호 변경
