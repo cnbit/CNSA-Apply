@@ -35,7 +35,7 @@ type Apply struct {
 	StudentNumber string    `gorm:"type:VARCHAR(6); primary_key" json:"student-number"`
 	Name          string    `gorm:"type:VARCHAR(50)" json:"name"`
 	Date          time.Time `gorm:"type:DATE; primary_key; unique_index" json:"date"`
-	Period        string    `gorm:"type:VARCHAR(5); primary_key; unique_index" json:"period"`
+	Period        string    `gorm:"type:VARCHAR(6); primary_key; unique_index" json:"period"`
 	Form          string    `gorm:"type:VARCHAR(1)" json:"form"`
 	Area          string    `gorm:"type:VARCHAR(1)" json:"area"`
 	Seat          string    `gorm:"type:VARCHAR(6); unique_index" json:"seat"`
@@ -71,19 +71,19 @@ func (c *Holyday) TableName() string {
 }
 
 // Login 학생 아이디 인증(SALT)
-func Login(studentNumber string, password string) (bool, string) {
+func Login(studentNumber string, password string) (bool, string, int) {
 	user := User{}
 	err := db.Table("users").Where("student_number = ?", studentNumber).First(&user).Error
 	if err != nil {
-		return false, ""
+		return false, "", -1
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT))
 	if err != nil {
-		return false, ""
+		return false, "", -1
 	}
 
-	return true, user.Name
+	return true, user.Name, user.Gender
 }
 
 // ChangePassword 비밀번호 변경
@@ -154,19 +154,22 @@ func GetTimeTableDays() [5]time.Time {
 // AddApply 비어있는 좌석에 신청
 // 같은 사람이 같은 시간에 신청은 선택할 때 방지
 // 발생 가능한 오류는 비슷한 시간대에 동일한 좌석에 신청
-func AddApply(studentNumber string, name string, day time.Time, period string, form string, seat string) error {
+func AddApply(studentNumber string, name string, day time.Time, period string, form string, area string, seat string) error {
 	apply := Apply{
 		StudentNumber: studentNumber,
 		Name:          name,
 		Date:          day,
 		Period:        period,
 		Form:          form,
+		Area:          area,
 		Seat:          seat,
 	}
 
-	err := db.Save(&apply).Error
-	if err.Error()[:9] != "Error 1062" {
-		err = errors.New("The seat has been applied")
+	err := db.Create(&apply).Error
+	if err != nil {
+		if err.Error()[:9] != "Error 1062" {
+			err = errors.New("The seat has been applied")
+		}
 	}
 
 	return err
@@ -194,10 +197,10 @@ func GetApplyMount(day time.Time, period string, form string) int {
 	return count
 }
 
-// GetApplyMountByArea 특정 시간, 구역의 신청 수를 반환함
-func GetApplyMountByArea(day time.Time, period string, form string, area string) int {
+// GetApplyMountOfArea 특정 시간, 구역의 신청 수를 반환함
+func GetApplyMountOfArea(day time.Time, period string, area string) int {
 	var count int
-	db.Table("applys").Where("date = ? AND period = ? AND form = ? AND area = ?", day.Format("2006-01-02"), period, form, area).Count(&count)
+	db.Table("applys").Where("date = ? AND period = ? AND form = A AND area = ?", day.Format("2006-01-02"), period, area).Count(&count)
 	return count
 }
 
@@ -231,7 +234,7 @@ func DeleteApply(studentNumber string, day time.Time, period string) error {
 
 // AddHolyday 공휴일 추가
 func AddHolyday(day time.Time, name string) error {
-	return db.Save(&Holyday{Date: day, Name: name}).Error
+	return db.Create(&Holyday{Date: day, Name: name}).Error
 }
 
 // GetTimeTableHolydays 페이지에 표시될 5일에 해당하는 공휴일 정보를 가져옴

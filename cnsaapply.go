@@ -45,17 +45,27 @@ func main() {
 
 	// Handle requests
 	// Filter by path
-	// 학생 페이지 =====================================
-	// 메인 페이지
-	e.GET("/", controller.Index, controller.AuthAPI)
-
+	// ================ 학생 페이지 ================
 	// Login Page
 	e.GET("/login", controller.Login)
 	e.POST("/login", controller.LoginPost)
 	// Logout
 	e.GET("/logout", controller.Logout)
 
-	// 교사 페이지 =====================================
+	// 메인 페이지
+	e.GET("/", controller.Index, controller.AuthAPI)
+
+	// ================ 학생 API ================
+	// 신청하기
+	e.POST("/api/apply", controller.ApplyAPI, controller.AuthAPI)
+	// 자신의 신청내역 가져오기
+	e.GET("/api/getApplys", controller.GetApplysAPI, controller.AuthAPI)
+	// 구역 신청 인원 수 가져오기
+	e.GET("/api/getApplyMountOfArea", controller.GetApplyMountOfAreaAPI, controller.AuthAPI)
+	// 신청 취소하기
+	e.POST("/api/cancelApply", controller.CancelApplyAPI, controller.AuthAPI)
+
+	// ================ 교사 페이지 ================
 	// Login Page
 	e.GET("/admin/login", controller.AdminLogin)
 	e.POST("/admin/login", controller.AdminLoginPost)
@@ -67,6 +77,10 @@ func main() {
 
 	// 메인 페이지
 	a.GET("/", controller.AdminIndex)
+
+	// ================ 교사 API ================
+	// 공휴일 삭제
+	a.POST("/api/admin/cancelHolyday", controller.AdminCancelHolydayAPI)
 
 	// Start web server
 	e.Start(":80")
