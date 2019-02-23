@@ -109,3 +109,8 @@ func CancelApplyAPI(c echo.Context) error {
 
 	return c.String(http.StatusOK, "success")
 }
+
+// ChangePassword : ChangePassword page
+func ChangePassword(c echo.Context) error {
+	return c.Render(http.StatusOK, "changePassword", nil)
+}

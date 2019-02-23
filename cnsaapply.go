@@ -55,6 +55,8 @@ func main() {
 	// 메인 페이지
 	e.GET("/", controller.Index, controller.AuthAPI)
 
+	// ChangePassword Page
+	e.GET("/user/changePassword", controller.ChangePassword, controller.AuthAPI)
 	// ================ 학생 API ================
 	// 신청하기
 	e.POST("/api/apply", controller.ApplyAPI, controller.AuthAPI)
