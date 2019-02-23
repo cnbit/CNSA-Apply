@@ -45,7 +45,7 @@ func main() {
 
 	// Handle requests
 	// Filter by path
-	// 학생 페이지 =====================================
+	// ================ 학생 페이지 ================
 	// 메인 페이지
 	e.GET("/", controller.Index, controller.AuthAPI)
 
@@ -55,11 +55,13 @@ func main() {
 	// Logout
 	e.GET("/logout", controller.Logout)
 
-	// 학생 API =======================================
+	// ================ 학생 API ================
 	// 신청하기
 	e.POST("/api/apply", controller.ApplyAPI)
+	// 자신의 신청내역 가져오기
+	e.GET("/api/getApplys", controller.GetApplysAPI, controller.AuthAPI)
 
-	// 교사 페이지 =====================================
+	// ================ 교사 페이지 ================
 	// Login Page
 	e.GET("/admin/login", controller.AdminLogin)
 	e.POST("/admin/login", controller.AdminLoginPost)
@@ -72,7 +74,7 @@ func main() {
 	// 메인 페이지
 	a.GET("/", controller.AdminIndex)
 
-	// 교사 API =======================================
+	// ================ 교사 API ================
 
 	// Start web server
 	e.Start(":80")

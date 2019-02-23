@@ -77,3 +77,9 @@ func ApplyAPI(c echo.Context) error {
 
 	return c.String(http.StatusOK, "success")
 }
+
+// GetApplysAPI 자신의 신청내역 가져오기
+func GetApplysAPI(c echo.Context) error {
+	return c.JSON(http.StatusOK, models.GetApplysByStudentNumber(session.Default(c).Get("studentNumber").(string)))
+}
+
