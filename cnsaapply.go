@@ -57,7 +57,7 @@ func main() {
 
 	// ================ 학생 API ================
 	// 신청하기
-	e.POST("/api/apply", controller.ApplyAPI)
+	e.POST("/api/apply", controller.ApplyAPI, controller.AuthAPI)
 	// 자신의 신청내역 가져오기
 	e.GET("/api/getApplys", controller.GetApplysAPI, controller.AuthAPI)
 

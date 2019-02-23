@@ -66,7 +66,7 @@ func Index(c echo.Context) error {
 // ApplyAPI 신청정보 등록
 func ApplyAPI(c echo.Context) error {
 	session := session.Default(c)
-	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
+	day, err := time.Parse("2006-01-02", c.FormValue("date"))
 	if err != nil {
 		return c.String(http.StatusOK, err.Error())
 	}
