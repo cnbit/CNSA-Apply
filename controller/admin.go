@@ -3,6 +3,7 @@ package controller
 import (
 	"CNSA-Apply/models"
 	"net/http"
+	"time"
 
 	session "github.com/ipfans/echo-session"
 	"github.com/labstack/echo"
@@ -56,4 +57,19 @@ func AdminLogout(c echo.Context) error {
 // AdminIndex : Main Page
 func AdminIndex(c echo.Context) error {
 	return c.Render(http.StatusOK, "adminIndex", nil)
+}
+
+// AdminCancelHolydayAPI 공휴일 취소 API
+func AdminCancelHolydayAPI(c echo.Context) error {
+	day, err := time.Parse("2006-01-02", c.FormValue("date"))
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+
+	err = models.DeleteHolyday(day)
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+
+	return c.String(http.StatusOK, "success")
 }
