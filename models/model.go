@@ -88,21 +88,20 @@ func Login(studentNumber string, password string) (bool, string, int) {
 
 // ChangePassword 비밀번호 변경
 func ChangePassword(studentNumber string, password string, newPassword string) error {
-	if len(newPassword) > 30 {
-		// 새로운 비밀번호의 길이가 길 때
-		err := errors.New("Exceed the length")
-		return err
-	} else if newPassword == "" {
-		// 아무것도 입력하지 않았을 때
-		err := errors.New("NewPassword is empty")
-		return err
-	}
 	user := User{}
 	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
 
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT)) != nil {
 		// db의 현재 비밀번호와 입력된 현재 비밀번호가 일치하지 않을 때
-		return errors.New("Password is incorrect")
+		return errors.New("incorrect")
+	} else if len(newPassword) > 30 {
+		// 새로운 비밀번호의 길이가 길 때
+		err := errors.New("exceed")
+		return err
+	} else if newPassword == "" {
+		// 아무것도 입력하지 않았을 때
+		err := errors.New("empty")
+		return err
 	}
 
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(newPassword+SALT), bcrypt.DefaultCost)
@@ -176,9 +175,13 @@ func AddApply(studentNumber string, name string, day time.Time, period string, f
 }
 
 // GetApplys 신청내역 확인
-func GetApplys(day time.Time, period string, form string) []Apply {
+func GetApplys(day time.Time, period string, form string, area string) []Apply {
 	applys := []Apply{}
-	db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Find(&applys)
+	if form == "A" {
+		db.Table("applys").Where("date = ? AND period = ? AND form = ? AND area = ?", day.Format("2006-01-02"), period, form, area).Find(&applys)
+	} else {
+		db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Find(&applys)
+	}
 
 	return applys
 }
