@@ -3,6 +3,7 @@ package controller
 import (
 	"CNSA-Apply/models"
 	"net/http"
+	"strconv"
 	"time"
 
 	session "github.com/ipfans/echo-session"
@@ -84,9 +85,17 @@ func GetApplysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetApplysByStudentNumber(session.Default(c).Get("studentNumber").(string)))
 }
 
+// GetApplyMountOfAreaAPI 구역 신청 인원 수 가져오기
+func GetApplyMountOfAreaAPI(c echo.Context) error {
+	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+	return c.String(http.StatusOK, strconv.Itoa(models.GetApplyMountOfArea(day, c.QueryParam("period"), c.QueryParam("area"))))
+}
+
 // CancelApplyAPI 신청 취소
 func CancelApplyAPI(c echo.Context) error {
-
 	session := session.Default(c)
 	day, err := time.Parse("2006-01-02", c.FormValue("date"))
 	if err != nil {
