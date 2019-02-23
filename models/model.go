@@ -88,7 +88,13 @@ func Login(studentNumber string, password string) (bool, string, int) {
 
 // ChangePassword 비밀번호 변경
 func ChangePassword(studentNumber string, password string, newPassword string) error {
-	if len(newPassword) > 30 {
+	user := User{}
+	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
+
+	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT)) != nil {
+		// db의 현재 비밀번호와 입력된 현재 비밀번호가 일치하지 않을 때
+		return errors.New("incorrect")
+	} else if len(newPassword) > 30 {
 		// 새로운 비밀번호의 길이가 길 때
 		err := errors.New("exceed")
 		return err
@@ -96,13 +102,6 @@ func ChangePassword(studentNumber string, password string, newPassword string) e
 		// 아무것도 입력하지 않았을 때
 		err := errors.New("empty")
 		return err
-	}
-	user := User{}
-	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
-
-	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT)) != nil {
-		// db의 현재 비밀번호와 입력된 현재 비밀번호가 일치하지 않을 때
-		return errors.New("incorrect")
 	}
 
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(newPassword+SALT), bcrypt.DefaultCost)
