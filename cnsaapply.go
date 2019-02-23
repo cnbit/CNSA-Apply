@@ -57,6 +57,7 @@ func main() {
 
 	// ChangePassword Page
 	e.GET("/user/changePassword", controller.ChangePassword, controller.AuthAPI)
+	e.POST("/user/changePassword", controller.ChangePasswordPost, controller.AuthAPI)
 	// ================ 학생 API ================
 	// 신청하기
 	e.POST("/api/apply", controller.ApplyAPI, controller.AuthAPI)
@@ -66,6 +67,8 @@ func main() {
 	e.GET("/api/getApplyMountOfArea", controller.GetApplyMountOfAreaAPI, controller.AuthAPI)
 	// 신청 취소하기
 	e.POST("/api/cancelApply", controller.CancelApplyAPI, controller.AuthAPI)
+	// [API]공휴일 정보 가져오기
+	e.GET("/api/getHolydays", controller.GetHolydays, controller.AuthAPI)
 
 	// ================ 교사 페이지 ================
 	// Login Page
