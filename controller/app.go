@@ -119,7 +119,7 @@ func ChangePassword(c echo.Context) error {
 func ChangePasswordPost(c echo.Context) error {
 	// 새로운 비밀번호와 새로운 비밀번호 확인이 다를 때
 	if c.FormValue("newPassword") != c.FormValue("newPasswordCheck") {
-		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status=Check")
+		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status=equalError")
 	}
 	session := session.Default(c)
 	err := models.ChangePassword(session.Get("studentNumber").(string), c.FormValue("loginPassword"), c.FormValue("newPassword"))
@@ -128,7 +128,7 @@ func ChangePasswordPost(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status="+err.Error())
 	}
 	// 비밀번호 변경 성공
-	return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status=nil")
+	return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status=success")
 
 }
 

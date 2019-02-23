@@ -2,7 +2,6 @@ package controller
 
 import (
 	"CNSA-Apply/models"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -74,4 +73,9 @@ func AdminCancelHolydayAPI(c echo.Context) error {
 	}
 
 	return c.String(http.StatusOK, "success")
+}
+
+// AdminGetApplysAPI 신청내역 가져오기 API
+func AdminGetApplysAPI(c echo.Context) error {
+	return c.JSON(http.StatusOK, models.GetApplys(time.Now(), c.QueryParam("period"), c.QueryParam("form"), c.QueryParam("area")))
 }

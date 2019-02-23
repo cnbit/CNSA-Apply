@@ -178,7 +178,7 @@ func AddApply(studentNumber string, name string, day time.Time, period string, f
 func GetApplys(day time.Time, period string, form string, area string) []Apply {
 	applys := []Apply{}
 	if form == "A" {
-		db.Table("applys").Where("date = ? AND period = ? AND form = ?, area = ?", day.Format("2006-01-02"), period, form, area).Find(&applys)
+		db.Table("applys").Where("date = ? AND period = ? AND form = ? AND area = ?", day.Format("2006-01-02"), period, form, area).Find(&applys)
 	} else {
 		db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Find(&applys)
 	}
