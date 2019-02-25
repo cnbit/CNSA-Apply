@@ -167,7 +167,7 @@ func AddApply(studentNumber string, name string, day time.Time, period string, f
 	err := db.Create(&apply).Error
 	if err != nil {
 		if err.Error()[:9] != "Error 1062" {
-			err = errors.New("The seat has been applied")
+			err = errors.New("applied")
 		}
 	}
 
