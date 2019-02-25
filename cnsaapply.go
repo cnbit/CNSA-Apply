@@ -91,6 +91,8 @@ func main() {
 	// 당일의 학생들 신청내역 가져오기 by period, form, area
 	a.GET("/api/admin/getApplys", controller.AdminGetApplysAPI)
 
+	// 공휴일 추가
+	a.POST("/api/admin/addHolyday", controller.AdminAddHolydayAPI)
 	// 공휴일 삭제
 	a.POST("/api/admin/cancelHolyday", controller.AdminCancelHolydayAPI)
 

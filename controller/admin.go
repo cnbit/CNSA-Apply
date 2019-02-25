@@ -79,3 +79,17 @@ func AdminCancelHolydayAPI(c echo.Context) error {
 func AdminGetApplysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetApplys(time.Now(), c.QueryParam("period"), c.QueryParam("form"), c.QueryParam("area")))
 }
+
+// AdminAddHolydayAPI 공휴일 추가하기
+func AdminAddHolydayAPI(c echo.Context) error {
+	day, err := time.Parse("2006-01-02", c.FormValue("date"))
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+	err = models.AddHolyday(day, c.FormValue("holydayName"))
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+
+	return c.String(http.StatusOK, "success")
+}
