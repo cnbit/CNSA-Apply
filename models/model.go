@@ -117,7 +117,7 @@ func TcrLogin(loginID string, loginPW string) bool {
 	}
 	client := &http.Client{Transport: tr}
 
-	resp, _ := client.PostForm("https://school.cnsa.hs.kr/login/userLogin", url.Values{
+	resp, _ := client.PostForm("https://student.cnsa.hs.kr/login/userLogin", url.Values{
 		"loginId": {loginID},
 		"loginPw": {loginPW},
 	})

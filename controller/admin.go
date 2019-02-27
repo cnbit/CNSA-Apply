@@ -93,3 +93,12 @@ func AdminAddHolydayAPI(c echo.Context) error {
 
 	return c.String(http.StatusOK, "success")
 }
+
+// AdminGetApplyMountAPI : 시간대에 해당하는 인원 수 가져오기
+func AdminGetApplyMountAPI(c echo.Context) error {
+	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+	return c.String(http.StatusOK, strconv.Itoa(models.GetApplyMount(day, c.QueryParam("period"), c.QueryParam("form"))))
+}
