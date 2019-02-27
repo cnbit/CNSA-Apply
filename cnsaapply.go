@@ -90,7 +90,7 @@ func main() {
 	// ================ 교사 API ================
 	// 당일의 학생들 신청내역 가져오기 by period, form, area
 	a.GET("/api/getApplys", controller.AdminGetApplysAPI)
-	a.GET("/api/getApplyMount", controller.GetApplyMountAPI)
+	a.GET("/api/getApplyMount", controller.AdminGetApplyMountAPI)
 
 	// 공휴일 추가
 	a.POST("/api/addHolyday", controller.AdminAddHolydayAPI)
