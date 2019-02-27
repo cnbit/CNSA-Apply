@@ -167,7 +167,7 @@ func AddApply(studentNumber string, name string, day time.Time, period string, f
 	err := db.Create(&apply).Error
 	if err != nil {
 		if err.Error()[:9] != "Error 1062" {
-			err = errors.New("The seat has been applied")
+			err = errors.New("The seat was applied")
 		}
 	}
 
@@ -257,5 +257,5 @@ func GetHolydays() []Holyday {
 
 // DeleteHolyday 공휴일을 삭제함
 func DeleteHolyday(holyday time.Time) error {
-	return db.Table("holydays").Where("date = ?", holyday).Delete(Holyday{}).Error
+	return db.Table("holydays").Where("date = ?", holyday.Format("2006-01-02")).Delete(Holyday{}).Error
 }
