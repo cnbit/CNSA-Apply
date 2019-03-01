@@ -50,21 +50,108 @@
         <button name="submit" type="button" onclick="select()">선택</button>
     </form>
     <script>
+        // 페이지에 표시되는 월~금 날짜를 반환
+        function GetTimeTableDays() {
+            var days = new Array();
+            var now = new Date();
+            days[0] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+
+            if (now.getDay() == 0) {
+                // 일요일이면 하루 더함
+                days[0] = new Date(days[0].getTime() + 86400000);
+                days[1] = new Date(days[0].getTime() + 86400000);
+                days[2] = new Date(days[1].getTime() + 86400000);
+                days[3] = new Date(days[2].getTime() + 86400000);
+                days[4] = new Date(days[3].getTime() + 86400000);
+            } else if (now.getDay() == 6) {
+                // 토요일이면 2일 더함
+                days[0] = new Date(days[0].getTime() + 86400000 * 2);
+                days[1] = new Date(days[0].getTime() + 86400000);
+                days[2] = new Date(days[1].getTime() + 86400000);
+                days[3] = new Date(days[2].getTime() + 86400000);
+                days[4] = new Date(days[3].getTime() + 86400000);
+            } else {
+                // 월~금이면 1-n(월: 1, 금: 5)일 더함
+                days[0] = new Date(days[0].getTime() + (86400000 * (2 - days[0].getDay())));
+                days[1] = new Date(days[0].getTime() + 86400000);
+                days[2] = new Date(days[1].getTime() + 86400000);
+                days[3] = new Date(days[2].getTime() + 86400000);
+                days[4] = new Date(days[3].getTime() + 86400000);
+            }
+
+            return days;
+        }
+
+        // 선택 완료
         function select() {
             var array = $("input[name='times']:checked").map(function () {
                 return this.value;
             }).get()
 
-            axios({
-                method: 'post',
-                url: '/apply/selectTime',
-                data: { 
-                    form: getParameterByName("form"),
-                    times: array 
-                }
-            }).then(function () {
+            if (getParameterByName("form") == "A") {
+                // 창학관 신청
+                sessionStorage.times = array;
+                sessionStorage.removeItem('time');
+                location.href = "/apply/selectArea"
+            } else {
+                // 자율관 신청
+                array.forEach(function (time) {
+                    index = 0;
+                    time = split(time, "-");
+                    if (time[0] == "mon") {
+                        index = 0;
+                    } else if (time[0] == "tue") {
+                        index = 1;
+                    } else if (time[0] == "wed") {
+                        index = 2;
+                    } else if (time[0] == "thr") {
+                        index = 3;
+                    } else if (time[0] == "fri") {
+                        index = 4;
+                    }
+
+                    day = GetTimeTableDays()[index];
+                    yyyymmdd = [day.getUTCFullYear(), 
+                    "-",
+                    (day.getUTCMonth() + 1 > 9 ? '' : '0') + (day.getUTCMonth() + 1), 
+                    "-",
+                    (day.getUTCDate() > 9 ? '' : '0') + day.getUTCDate()].join('');
+                    $.post("/api/apply", {
+                        date: yyyymmdd,
+                        period: time[1],
+                        form: "B",
+                    }, function (data) {
+                        /*
+                    if (data == "success") {
+                        sessionStorage.removeItem('time');
+    
+                        if (sessionStorage.times == null) {
+                            location.href = "/apply/success"
+                        } else {
+                            location.href = "/apply/selectArea"
+                        }
+                    } else {
+                        // TODO: 에러 메세지 세분화
+                    }*/
+                    });
+                });
+
                 location.href = "/apply/success"
-            });
+            }
+        }
+
+        // 문자열 자르기
+        function split(str, separator, limit) {
+            str = str.split(separator);
+
+            if (str.length > limit) {
+                var ret = str.splice(0, limit);
+                ret.push(str.join(separator));
+
+                return ret;
+            }
+
+            return str;
         }
 
         // QuerySelector

@@ -1,0 +1,91 @@
+[[define "selectArea"]]
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- JQuery -->
+    <script src="/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <!-- Axios -->
+    <script src="/assets/js/axios.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <h1>구역 선택</h1>
+    <form method="POST">
+        <input type="hidden" id="time" name="time">
+        <input type="hidden" id="area" name="area">
+        <button type="button" onclick="selectArea('A')" [[if (eq .gender 0)]]disabled[[end]]>A 구역</button>
+        <br />
+        <br />
+        <button type="button" onclick="selectArea('B')" [[if (eq .gender 0)]]disabled[[end]]>B 구역</button>
+        <br />
+        <br />
+        <button type="button" onclick="selectArea('C')" [[if (eq .gender 0)]]disabled[[end]]>C 구역</button>
+        <br />
+        <br />
+        <button type="button" onclick="selectArea('D')" [[if (eq .gender 0)]]disabled[[end]]>D 구역</button>
+        <br />
+        <br />
+        <button type="button" onclick="selectArea('E')" [[if (eq .gender 1)]]disabled[[end]]>E 구역</button>
+        <br />
+        <br />
+        <button type="button" onclick="selectArea('F')" [[if (eq .gender 1)]]disabled[[end]]>F 구역</button>
+        <br />
+        <br />
+        <button type="button" onclick="selectArea('G')" [[if (eq .gender 1)]]disabled[[end]]>G 구역</button>
+        <br />
+        <br />
+        <br />
+        <button type="submit">선택</button>
+    </form>
+    <script>
+        if (sessionStorage.time == null) {
+            if (sessionStorage.times.search(",") == -1) {
+                // 신청 시간대가 하나일 경우
+                sessionStorage.time = sessionStorage.times;
+                sessionStorage.removeItem("times")
+            } else {
+                // 신경 시간대가 여러 개일 경우
+                data = split(sessionStorage.times, ",", 1);
+                sessionStorage.time = data[0];
+                sessionStorage.times = data[1];
+            }
+        }
+        document.getElementById('time').value = sessionStorage.time;
+
+        // 문자열 자르기
+        function split(str, separator, limit) {
+            str = str.split(separator);
+
+            if (str.length > limit) {
+                var ret = str.splice(0, limit);
+                ret.push(str.join(separator));
+
+                return ret;
+            }
+
+            return str;
+        }
+    </script>
+
+    <script>
+        // 구역 선택
+        function selectArea(area) {
+            document.getElementById('area').value = area;
+        }
+
+        // QuerySelector
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+    </script>
+</body>
+
+</html>
+[[end]]

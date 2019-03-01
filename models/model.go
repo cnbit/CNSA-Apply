@@ -37,8 +37,8 @@ type Apply struct {
 	Date          time.Time `gorm:"type:DATE; primary_key; unique_index" json:"date"`
 	Period        string    `gorm:"type:VARCHAR(6); primary_key; unique_index" json:"period"`
 	Form          string    `gorm:"type:VARCHAR(1)" json:"form"`
-	Area          string    `gorm:"type:VARCHAR(1)" json:"area"`
-	Seat          string    `gorm:"type:VARCHAR(6); unique_index" json:"seat"`
+	Area          string    `gorm:"type:VARCHAR(1); default: null" json:"area"`
+	Seat          string    `gorm:"type:VARCHAR(6); default: null; unique_index" json:"seat"`
 }
 
 // TableName of Apply
@@ -154,7 +154,7 @@ func GetTimeTableDays() [5]time.Time {
 // 같은 사람이 같은 시간에 신청은 선택할 때 방지
 // 발생 가능한 오류는 비슷한 시간대에 동일한 좌석에 신청
 func AddApply(studentNumber string, name string, day time.Time, period string, form string, area string, seat string) error {
-	apply := Apply{
+	err := db.Create(&Apply{
 		StudentNumber: studentNumber,
 		Name:          name,
 		Date:          day,
@@ -162,9 +162,8 @@ func AddApply(studentNumber string, name string, day time.Time, period string, f
 		Form:          form,
 		Area:          area,
 		Seat:          seat,
-	}
+	}).Error
 
-	err := db.Create(&apply).Error
 	if err != nil {
 		if err.Error()[:9] != "Error 1062" {
 			err = errors.New("The seat was applied")

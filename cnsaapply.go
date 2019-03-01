@@ -59,7 +59,17 @@ func main() {
 	e.GET("/apply/", controller.SelectForm, controller.AuthAPI)
 	// 신청하기 - 시간대 선택
 	e.GET("/apply/selectTime", controller.SelectTime, controller.AuthAPI)
-	e.POST("/apply/selectTime", controller.SelectTimePOST, controller.AuthAPI)
+	// 신청하기 - 구역 선택
+	e.GET("/apply/selectArea", controller.SelectArea, controller.AuthAPI)
+	e.POST("/apply/selectArea", controller.SelectAreaPOST, controller.AuthAPI)
+	// 신청하기 - 구역 선택
+	e.GET("/apply/selectSeatA", controller.SelectSeatA, controller.AuthAPI)
+	e.GET("/apply/selectSeatB", controller.SelectSeatB, controller.AuthAPI)
+	e.GET("/apply/selectSeatC", controller.SelectSeatC, controller.AuthAPI)
+	e.GET("/apply/selectSeatD", controller.SelectSeatD, controller.AuthAPI)
+	e.GET("/apply/selectSeatE", controller.SelectSeatE, controller.AuthAPI)
+	e.GET("/apply/selectSeatF", controller.SelectSeatF, controller.AuthAPI)
+	e.GET("/apply/selectSeatG", controller.SelectSeatG, controller.AuthAPI)
 	// 신청하기 - 신청완료
 	e.GET("/apply/success", controller.ApplySuccess, controller.AuthAPI)
 
