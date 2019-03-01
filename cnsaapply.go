@@ -2,8 +2,8 @@ package main
 
 import (
 	"CNSA-Apply/controller"
+	"html/template"
 	"io"
-	"text/template"
 
 	"github.com/ipfans/echo-session"
 	"github.com/labstack/echo"
@@ -54,6 +54,14 @@ func main() {
 
 	// 메인 페이지
 	e.GET("/", controller.Index, controller.AuthAPI)
+
+	// 신청하기 - 면학실 선택
+	e.GET("/apply/", controller.SelectForm, controller.AuthAPI)
+	// 신청하기 - 시간대 선택
+	e.GET("/apply/selectTime", controller.SelectTime, controller.AuthAPI)
+	e.POST("/apply/selectTime", controller.SelectTimePOST, controller.AuthAPI)
+	// 신청하기 - 신청완료
+	e.GET("/apply/success", controller.ApplySuccess, controller.AuthAPI)
 
 	// ChangePassword Page
 	e.GET("/user/changePassword", controller.ChangePassword, controller.AuthAPI)
