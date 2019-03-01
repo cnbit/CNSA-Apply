@@ -1,0 +1,84 @@
+[[define "selectTime"]]
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- JQuery -->
+    <script src="/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <!-- Axios -->
+    <script src="/assets/js/axios.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <h1>시간대 선택</h1>
+    <form method="POST">
+        <h3>월요일</h3>
+        <input type="checkbox" name="times" value="mon-7">7교시
+        <input type="checkbox" name="times" value="mon-CAS">CAS
+        <input type="checkbox" name="times" value="mon-EP1">EP1
+        <input type="checkbox" name="times" value="mon-EP2">EP2
+        <br />
+
+        <h3>화요일</h3>
+        <input type="checkbox" name="times" value="tue-7">7교시
+        <input type="checkbox" name="times" value="tue-CAS">CAS
+        <input type="checkbox" name="times" value="tue-EP1">EP1
+        <input type="checkbox" name="times" value="tue-EP2">EP2
+        <br />
+
+        <h3>수요일</h3>
+        <input type="checkbox" name="times" value="wed-7">7교시
+        <input type="checkbox" name="times" value="wed-CAS">CAS
+        <input type="checkbox" name="times" value="wed-EP1">EP1
+        <input type="checkbox" name="times" value="wed-EP2">EP2
+        <br />
+
+        <h3>목요일</h3>
+        <input type="checkbox" name="times" value="thr-7">7교시
+        <input type="checkbox" name="times" value="thr-CAS">CAS
+        <input type="checkbox" name="times" value="thr-EP1">EP1
+        <input type="checkbox" name="times" value="thr-EP2">EP2
+        <br />
+
+        <h3>금요일</h3>
+        <input type="checkbox" name="times" value="fri-7">7교시
+        <input type="checkbox" name="times" value="fri-CAS">CAS
+        <input type="checkbox" name="times" value="fri-EP1">EP1
+        <input type="checkbox" name="times" value="fri-EP2">EP2
+        <br />
+        <br />
+        <button name="submit" type="button" onclick="select()">선택</button>
+    </form>
+    <script>
+        function select() {
+            var array = $("input[name='times']:checked").map(function () {
+                return this.value;
+            }).get()
+
+            axios({
+                method: 'post',
+                url: '/apply/selectTime',
+                data: { 
+                    form: getParameterByName("form"),
+                    times: array 
+                }
+            }).then(function () {
+                location.href = "/apply/success"
+            });
+        }
+
+        // QuerySelector
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+    </script>
+</body>
+
+</html>
+[[end]]

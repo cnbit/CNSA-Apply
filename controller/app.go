@@ -4,6 +4,7 @@ import (
 	"CNSA-Apply/models"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	session "github.com/ipfans/echo-session"
@@ -62,6 +63,71 @@ func Logout(c echo.Context) error {
 // Index : Main Page
 func Index(c echo.Context) error {
 	return c.Render(http.StatusOK, "index", nil)
+}
+
+// SelectForm : 신청하기 - 면학실 선택
+func SelectForm(c echo.Context) error {
+	return c.Render(http.StatusOK, "selectForm", nil)
+}
+
+// SelectTime : 신청하기 - 시간대 선택
+func SelectTime(c echo.Context) error {
+	return c.Render(http.StatusOK, "selectTime", nil)
+}
+
+// Periods json models
+type Periods struct {
+	Form  string   `json:"form"`
+	Times []string `json:"times"`
+}
+
+// SelectTimePOST : 시간대 선택 완료
+func SelectTimePOST(c echo.Context) error {
+	var periods Periods
+	if err := c.Bind(&periods); err != nil {
+		return err
+	}
+
+	if periods.Form == "A" {
+		// 창학관 신청
+
+		// 신청 시간으로 redirect
+		return c.Redirect(http.StatusMovedPermanently, "/apply/selectArea?date="+models.GetTimeTableDays()[index].Format("2006-01-02")+"&period="+period)
+	} else {
+		// 자율관 신청
+
+		days := models.GetTimeTableDays()
+		// mon-7,tue-EP1 형식 -> , 단위로 구분
+		for _, period := range periods.Times {
+			// mon-7 형식 -> mon과 7로 분리
+			temp := strings.Split(period, "-")
+			day, period := temp[0], temp[1]
+
+			index := 0
+			// 요일별로 구분
+			if day == "mon" {
+				index = 0
+			} else if day == "tue" {
+				index = 1
+			} else if day == "wed" {
+				index = 2
+			} else if day == "thr" {
+				index = 3
+			} else if day == "fri" {
+				index = 4
+			}
+
+			session := session.Default(c)
+			models.AddApply(session.Get("studentNumber").(string), session.Get("name").(string), days[index], period, "B", "", "")
+		}
+
+		return c.Redirect(http.StatusMovedPermanently, "/apply/success")
+	}
+}
+
+// ApplySuccess : 신청하기 - 신청완료
+func ApplySuccess(c echo.Context) error {
+	return c.Render(http.StatusOK, "applySuccess", nil)
 }
 
 // ApplyAPI 신청정보 등록
