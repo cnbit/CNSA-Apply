@@ -2,8 +2,8 @@ package main
 
 import (
 	"CNSA-Apply/controller"
+	"html/template"
 	"io"
-	"text/template"
 
 	"github.com/ipfans/echo-session"
 	"github.com/labstack/echo"
