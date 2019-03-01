@@ -59,9 +59,9 @@ func main() {
 	e.GET("/apply/", controller.SelectForm, controller.AuthAPI)
 	// 신청하기 - 시간대 선택
 	e.GET("/apply/selectTime", controller.SelectTime, controller.AuthAPI)
-	e.POST("/apply/selectTime", controller.SelectTimePOST, controller.AuthAPI)
 	// 신청하기 - 구역 선택
 	e.GET("/apply/selectArea", controller.SelectArea, controller.AuthAPI)
+	e.POST("/apply/selectArea", controller.SelectAreaPOST, controller.AuthAPI)
 	// 신청하기 - 구역 선택
 	e.GET("/apply/selectSeatA", controller.SelectSeatA, controller.AuthAPI)
 	e.GET("/apply/selectSeatB", controller.SelectSeatB, controller.AuthAPI)

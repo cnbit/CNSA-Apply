@@ -1,16 +1,112 @@
 [[define "selectSeatA"]]
 <!DOCTYPE html>
 <html>
+
 <head>
+    <!-- JQuery -->
+    <script src="/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <!-- Axios -->
+    <script src="/assets/js/axios.js" type="text/javascript"></script>
 </head>
+
 <body>
     <h1>A구역 좌석 선택</h1>
-    
+    <button id="1" type="button" onclick="select(1)">1번</button>
+    <button id="2" type="button" onclick="select(2)">2번</button>
+    <button id="3" type="button" onclick="select(3)">3번</button>
+    <button id="4" type="button" onclick="select(4)">4번</button>
+    <button id="5" type="button" onclick="select(5)">5번</button>
+
+    <button id="6" type="button" onclick="select(6)">6번</button>
+    <button id="7" type="button" onclick="select(7)">7번</button>
+    <button id="8" type="button" onclick="select(8)">8번</button>
+    <button id="9" type="button" onclick="select(9)">9번</button>
+    <button id="10" type="button" onclick="select(10)">10번</button>
+    <button id="11" type="button" onclick="select(11)">11번</button>
+    <br>
+
+    <button id="12" type="button" onclick="select(12)">12번</button>
+    <button id="13" type="button" onclick="select(13)">13번</button>
+    <button id="14" type="button" onclick="select(14)">14번</button>
+    <button id="15" type="button" onclick="select(15)">15번</button>
+    <button id="16" type="button" onclick="select(16)">16번</button>
+
+    <button id="17" type="button" onclick="select(17)">17번</button>
+    <button id="18" type="button" onclick="select(18)">18번</button>
+    <button id="19" type="button" onclick="select(19)">19번</button>
+    <button id="20" type="button" onclick="select(20)">20번</button>
+    <button id="21" type="button" onclick="select(21)">21번</button>
+    <button id="22" type="button" onclick="select(22)">22번</button>
+    <br>
+    <br>
+
+    <button id="23" type="button" onclick="select(23)">23번</button>
+    <button id="24" type="button" onclick="select(24)">24번</button>
+    <button id="25" type="button" onclick="select(25)">25번</button>
+    <button id="26" type="button" onclick="select(26)">26번</button>
+    <button id="27" type="button" onclick="select(27)">27번</button>
+    <br>
+    <br>
+    <br>
+    <br>
+    <button type="button" onclick="apply()">신청하기</button>
+
+    <script>
+        var seatNum;
+
+        function apply() {
+            // 창학관 신청
+            $.post("/api/apply", {
+                date: getParameterByName("date"),
+                period: getParameterByName("period"),
+                form: "A",
+                area: "A",
+                seat: seatNum
+            }, function (data) {
+                sessionStorage.removeItem('time');
+
+                if (sessionStorage.times == null) {
+                    location.href = "/apply/success"
+                } else {
+                    location.href = "/apply/selectArea"
+                }
+                /*
+                if (data == "success") {
+                    sessionStorage.removeItem('time');
+
+                    if (sessionStorage.times == null) {
+                        location.href = "/apply/success"
+                    } else {
+                        location.href = "/apply/selectArea"
+                    }
+                } else {
+                    // TODO: 에러 메세지 세분화
+                }*/
+            });
+        }
+
+        function select(seat) {
+            seatNum = seat;
+        }
+
+        // QuerySelector
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+    </script>
+
     [[if (eq .gender 0)]]
     <script>
         history.back();
     </script>
     [[end]]
 </body>
+
 </html>
 [[end]]

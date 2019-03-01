@@ -75,52 +75,41 @@ func SelectTime(c echo.Context) error {
 	return c.Render(http.StatusOK, "selectTime", nil)
 }
 
-// Periods json models
-type Periods struct {
-	Form  string   `json:"form"`
-	Times []string `json:"times"`
-}
-
-// SelectTimePOST : 시간대 선택 완료
-func SelectTimePOST(c echo.Context) error {
-	var periods Periods
-	if err := c.Bind(&periods); err != nil {
-		return err
-	}
-
-	// 자율관 신청
-	for _, period := range periods.Times {
-		// mon-7 형식 -> mon과 7로 분리
-		temp := strings.Split(period, "-")
-		day, period := temp[0], temp[1]
-
-		index := 0
-		// 요일별로 구분
-		if day == "mon" {
-			index = 0
-		} else if day == "tue" {
-			index = 1
-		} else if day == "wed" {
-			index = 2
-		} else if day == "thr" {
-			index = 3
-		} else if day == "fri" {
-			index = 4
-		}
-
-		session := session.Default(c)
-		models.AddApply(session.Get("studentNumber").(string), session.Get("name").(string), models.GetTimeTableDays()[index], period, "B", "", "")
-	}
-
-	return c.Redirect(http.StatusMovedPermanently, "/apply/success")
-}
-
 // SelectArea : 신청하기 - 구역 선택
 func SelectArea(c echo.Context) error {
 	session := session.Default(c)
 	return c.Render(http.StatusOK, "selectArea", map[string]interface{}{
 		"gender": session.Get("gender").(int),
 	})
+}
+
+// SelectAreaPOST : 신청하기 - 구역 선택
+func SelectAreaPOST(c echo.Context) error {
+	// mon-7 형식 -> mon과 7로 분리
+	temp := strings.Split(c.FormValue("time"), "-")
+	day, period := temp[0], temp[1]
+
+	index := 0
+	// 요일별로 구분
+	if day == "mon" {
+		index = 0
+	} else if day == "tue" {
+		index = 1
+	} else if day == "wed" {
+		index = 2
+	} else if day == "thr" {
+		index = 3
+	} else if day == "fri" {
+		index = 4
+	}
+
+	area := c.FormValue("area")
+	if area == "" {
+		// 구역을 선택하지 않았을 경우
+		return c.Redirect(http.StatusMovedPermanently, "/apply/selectArea")
+	}
+
+	return c.Redirect(http.StatusMovedPermanently, "/apply/selectSeat"+area+"?date="+models.GetTimeTableDays()[index].Format("2006-01-02")+"&period="+period)
 }
 
 // SelectSeatA : 신청하기 - 좌석 선택
