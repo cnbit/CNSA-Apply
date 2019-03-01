@@ -55,16 +55,23 @@
                 return this.value;
             }).get()
 
-            axios({
-                method: 'post',
-                url: '/apply/selectTime',
-                data: { 
-                    form: getParameterByName("form"),
-                    times: array 
-                }
-            }).then(function () {
-                location.href = "/apply/success"
-            });
+            if (getParameterByName("form") == "A") {
+                // 창학관 신청
+                sessionStorage.times = array;
+                location.href = "/apply/selectArea"
+            } else {
+                // 자율관 신청
+                axios({
+                    method: 'post',
+                    url: '/apply/selectTime',
+                    data: {
+                        form: "B",
+                        times: array
+                    }
+                }).then(function () {
+                    location.href = "/apply/success"
+                });
+            }
         }
 
         // QuerySelector

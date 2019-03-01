@@ -88,41 +88,95 @@ func SelectTimePOST(c echo.Context) error {
 		return err
 	}
 
-	if periods.Form == "A" {
-		// 창학관 신청
+	// 자율관 신청
+	for _, period := range periods.Times {
+		// mon-7 형식 -> mon과 7로 분리
+		temp := strings.Split(period, "-")
+		day, period := temp[0], temp[1]
 
-		// 신청 시간으로 redirect
-		return c.Redirect(http.StatusMovedPermanently, "/apply/selectArea")
-	} else {
-		// 자율관 신청
-
-		days := models.GetTimeTableDays()
-		// mon-7,tue-EP1 형식 -> , 단위로 구분
-		for _, period := range periods.Times {
-			// mon-7 형식 -> mon과 7로 분리
-			temp := strings.Split(period, "-")
-			day, period := temp[0], temp[1]
-
-			index := 0
-			// 요일별로 구분
-			if day == "mon" {
-				index = 0
-			} else if day == "tue" {
-				index = 1
-			} else if day == "wed" {
-				index = 2
-			} else if day == "thr" {
-				index = 3
-			} else if day == "fri" {
-				index = 4
-			}
-
-			session := session.Default(c)
-			models.AddApply(session.Get("studentNumber").(string), session.Get("name").(string), days[index], period, "B", "", "")
+		index := 0
+		// 요일별로 구분
+		if day == "mon" {
+			index = 0
+		} else if day == "tue" {
+			index = 1
+		} else if day == "wed" {
+			index = 2
+		} else if day == "thr" {
+			index = 3
+		} else if day == "fri" {
+			index = 4
 		}
 
-		return c.Redirect(http.StatusMovedPermanently, "/apply/success")
+		session := session.Default(c)
+		models.AddApply(session.Get("studentNumber").(string), session.Get("name").(string), models.GetTimeTableDays()[index], period, "B", "", "")
 	}
+
+	return c.Redirect(http.StatusMovedPermanently, "/apply/success")
+}
+
+// SelectArea : 신청하기 - 구역 선택
+func SelectArea(c echo.Context) error {
+	session := session.Default(c)
+	return c.Render(http.StatusOK, "selectArea", map[string]interface{}{
+		"gender": session.Get("gender").(int),
+	})
+}
+
+// SelectSeatA : 신청하기 - 좌석 선택
+func SelectSeatA(c echo.Context) error {
+	session := session.Default(c)
+	return c.Render(http.StatusOK, "selectSeatA", map[string]interface{}{
+		"gender": session.Get("gender").(int),
+	})
+}
+
+// SelectSeatB : 신청하기 - 좌석 선택
+func SelectSeatB(c echo.Context) error {
+	session := session.Default(c)
+	return c.Render(http.StatusOK, "selectSeatB", map[string]interface{}{
+		"gender": session.Get("gender").(int),
+	})
+}
+
+// SelectSeatC : 신청하기 - 좌석 선택
+func SelectSeatC(c echo.Context) error {
+	session := session.Default(c)
+	return c.Render(http.StatusOK, "selectSeatC", map[string]interface{}{
+		"gender": session.Get("gender").(int),
+	})
+}
+
+// SelectSeatD : 신청하기 - 좌석 선택
+func SelectSeatD(c echo.Context) error {
+	session := session.Default(c)
+	return c.Render(http.StatusOK, "selectSeatD", map[string]interface{}{
+		"gender": session.Get("gender").(int),
+	})
+}
+
+// SelectSeatE : 신청하기 - 좌석 선택
+func SelectSeatE(c echo.Context) error {
+	session := session.Default(c)
+	return c.Render(http.StatusOK, "selectSeatE", map[string]interface{}{
+		"gender": session.Get("gender").(int),
+	})
+}
+
+// SelectSeatF : 신청하기 - 좌석 선택
+func SelectSeatF(c echo.Context) error {
+	session := session.Default(c)
+	return c.Render(http.StatusOK, "selectSeatF", map[string]interface{}{
+		"gender": session.Get("gender").(int),
+	})
+}
+
+// SelectSeatG : 신청하기 - 좌석 선택
+func SelectSeatG(c echo.Context) error {
+	session := session.Default(c)
+	return c.Render(http.StatusOK, "selectSeatG", map[string]interface{}{
+		"gender": session.Get("gender").(int),
+	})
 }
 
 // ApplySuccess : 신청하기 - 신청완료
