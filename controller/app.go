@@ -92,7 +92,7 @@ func SelectTimePOST(c echo.Context) error {
 		// 창학관 신청
 
 		// 신청 시간으로 redirect
-		return c.Redirect(http.StatusMovedPermanently, "/apply/selectArea?date="+models.GetTimeTableDays()[index].Format("2006-01-02")+"&period="+period)
+		return c.Redirect(http.StatusMovedPermanently, "/apply/selectArea")
 	} else {
 		// 자율관 신청
 
