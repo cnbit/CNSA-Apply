@@ -122,7 +122,7 @@ func main() {
 	// 공휴일 삭제
 	a.POST("/api/cancelHolyday", controller.AdminCancelHolydayAPI)
 	// 공휴일 모두 가져오기
-	a.GET("/api/getAllHolydays", controller.AdimnGetAllHolydayAPI)
+	a.GET("/api/getAllHolydays", controller.AdminGetAllHolydayAPI)
 	// 공휴일 1주일치 가져오기
 	a.GET("/api/getTimeTableHolydays", controller.AdminGetTimeTableHolydaysAPI)
 	// Start web server
