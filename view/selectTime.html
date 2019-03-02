@@ -5,81 +5,67 @@
 <head>
     <!-- JQuery -->
     <script src="/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
+
+    <!-- Custom scripts -->
+    <script src="/assets/js/script.js" type="text/javascript"></script>
 </head>
 
 <body>
     <h1>시간대 선택</h1>
     <form method="POST">
         <h3>월요일</h3>
-        <input type="checkbox" name="times" value="mon-7">7교시
-        <input type="checkbox" name="times" value="mon-CAS">CAS
-        <input type="checkbox" name="times" value="mon-EP1">EP1
-        <input type="checkbox" name="times" value="mon-EP2">EP2
+        <label><input id="0-7" type="checkbox" name="times" value="mon-7">7교시</label>
+        <label><input id="0-CAS" type="checkbox" name="times" value="mon-CAS">CAS</label>
+        <label><input id="0-EP1" type="checkbox" name="times" value="mon-EP1">EP1</label>
+        <label><input id="0-EP2" type="checkbox" name="times" value="mon-EP2">EP2</label>
         <br />
 
         <h3>화요일</h3>
-        <input type="checkbox" name="times" value="tue-7">7교시
-        <input type="checkbox" name="times" value="tue-CAS">CAS
-        <input type="checkbox" name="times" value="tue-EP1">EP1
-        <input type="checkbox" name="times" value="tue-EP2">EP2
+        <label><input id="1-7" type="checkbox" name="times" value="tue-7">7교시</label>
+        <label><input id="1-CAS" type="checkbox" name="times" value="tue-CAS">CAS</label>
+        <label><input id="1-EP1" type="checkbox" name="times" value="tue-EP1">EP1</label>
+        <label><input id="1-EP2" type="checkbox" name="times" value="tue-EP2">EP2</label>
         <br />
 
         <h3>수요일</h3>
-        <input type="checkbox" name="times" value="wed-7">7교시
-        <input type="checkbox" name="times" value="wed-CAS">CAS
-        <input type="checkbox" name="times" value="wed-EP1">EP1
-        <input type="checkbox" name="times" value="wed-EP2">EP2
+        <label><input id="2-7" type="checkbox" name="times" value="wed-7">7교시</label>
+        <label><input id="2-CAS" type="checkbox" name="times" value="wed-CAS">CAS</label>
+        <label><input id="2-EP1" type="checkbox" name="times" value="wed-EP1">EP1</label>
+        <label><input id="2-EP2" type="checkbox" name="times" value="wed-EP2">EP2</label>
         <br />
 
         <h3>목요일</h3>
-        <input type="checkbox" name="times" value="thr-7">7교시
-        <input type="checkbox" name="times" value="thr-CAS">CAS
-        <input type="checkbox" name="times" value="thr-EP1">EP1
-        <input type="checkbox" name="times" value="thr-EP2">EP2
+        <label><input id="3-7" type="checkbox" name="times" value="thr-7">7교시</label>
+        <label><input id="3-CAS" type="checkbox" name="times" value="thr-CAS">CAS</label>
+        <label><input id="3-EP1" type="checkbox" name="times" value="thr-EP1">EP1</label>
+        <label><input id="3-EP2" type="checkbox" name="times" value="thr-EP2">EP2</label>
         <br />
 
         <h3>금요일</h3>
-        <input type="checkbox" name="times" value="fri-7">7교시
-        <input type="checkbox" name="times" value="fri-CAS">CAS
-        <input type="checkbox" name="times" value="fri-EP1">EP1
-        <input type="checkbox" name="times" value="fri-EP2">EP2
+        <label><input id="4-7" type="checkbox" name="times" value="fri-7">7교시</label>
+        <label><input id="4-CAS" type="checkbox" name="times" value="fri-CAS">CAS</label>
+        <label><input id="4-EP1" type="checkbox" name="times" value="fri-EP1">EP1</label>
+        <label><input id="4-EP2" type="checkbox" name="times" value="fri-EP2">EP2</label>
         <br />
         <br />
         <button name="submit" type="button" onclick="select()">선택</button>
     </form>
+
     <script>
-        // 페이지에 표시되는 월~금 날짜를 반환
-        function GetTimeTableDays() {
-            var days = new Array();
-            var now = new Date();
-            days[0] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+        // 신청한 시간대 클릭 안되게 설정
+        $.get("/api/getApplys", function (applys) {
+            applys.forEach(function (apply) {
+                var days = GetTimeTableDays();
+                for(i = 0; i < 5; i++) {
+                    if(days[i].yyyymmdd() == apply.date.substring(0, 10)){
+                        $("#" + i + "-" + apply.period).prop("disabled", true);
+                    }
+                }
+            });
+        });
+    </script>
 
-            if (now.getDay() == 0) {
-                // 일요일이면 하루 더함
-                days[0] = new Date(days[0].getTime() + 86400000 * 2);
-                days[1] = new Date(days[0].getTime() + 86400000);
-                days[2] = new Date(days[1].getTime() + 86400000);
-                days[3] = new Date(days[2].getTime() + 86400000);
-                days[4] = new Date(days[3].getTime() + 86400000);
-            } else if (now.getDay() == 6) {
-                // 토요일이면 2일 더함
-                days[0] = new Date(days[0].getTime() + 86400000 * 3);
-                days[1] = new Date(days[0].getTime() + 86400000);
-                days[2] = new Date(days[1].getTime() + 86400000);
-                days[3] = new Date(days[2].getTime() + 86400000);
-                days[4] = new Date(days[3].getTime() + 86400000);
-            } else {
-                // 월~금이면 1-n(월: 1, 금: 5)일 더함
-                days[0] = new Date(days[0].getTime() + (86400000 * (2 - days[0].getDay())));
-                days[1] = new Date(days[0].getTime() + 86400000);
-                days[2] = new Date(days[1].getTime() + 86400000);
-                days[3] = new Date(days[2].getTime() + 86400000);
-                days[4] = new Date(days[3].getTime() + 86400000);
-            }
-
-            return days;
-        }
-
+    <script>
         // 선택 완료
         function select() {
             var array = $("input[name='times']:checked").map(function () {
@@ -111,14 +97,8 @@
                         index = 4;
                     }
 
-                    day = GetTimeTableDays()[index];
-                    yyyymmdd = [day.getUTCFullYear(),
-                        "-",
-                    (day.getUTCMonth() + 1 > 9 ? '' : '0') + (day.getUTCMonth() + 1),
-                        "-",
-                    (day.getUTCDate() > 9 ? '' : '0') + day.getUTCDate()].join('');
                     $.post("/api/apply", {
-                        date: yyyymmdd,
+                        date: GetTimeTableDays()[index].yyyymmdd(),
                         period: time[1],
                         form: "B",
                     }, function (data) {
@@ -140,31 +120,6 @@
                     });
                 });
             }
-        }
-
-        // 문자열 자르기
-        function split(str, separator, limit) {
-            str = str.split(separator);
-
-            if (str.length > limit) {
-                var ret = str.splice(0, limit);
-                ret.push(str.join(separator));
-
-                return ret;
-            }
-
-            return str;
-        }
-
-        // QuerySelector
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, '\\$&');
-            var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
     </script>
 </body>
