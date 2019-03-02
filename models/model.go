@@ -93,14 +93,14 @@ func ChangePassword(studentNumber string, password string, newPassword string) e
 
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT)) != nil {
 		// db의 현재 비밀번호와 입력된 현재 비밀번호가 일치하지 않을 때
-		return errors.New("incorrect")
+		return errors.New("비밀번호가 일치하지 않습니다")
 	} else if len(newPassword) > 30 {
 		// 새로운 비밀번호의 길이가 길 때
-		err := errors.New("exceed")
+		err := errors.New("비밀번호가 너무 깁니다")
 		return err
 	} else if newPassword == "" {
 		// 아무것도 입력하지 않았을 때
-		err := errors.New("empty")
+		err := errors.New("비밀번호가 비어있습니다")
 		return err
 	}
 

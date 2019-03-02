@@ -242,26 +242,24 @@ func ApplyHistory(c echo.Context) error {
 
 // Account : ChangePassword page
 func Account(c echo.Context) error {
-	return c.Render(http.StatusOK, "account", map[string]interface{}{
-		"status": c.QueryParam("status"),
-	})
+	return c.Render(http.StatusOK, "account", nil)
 }
 
 // AccountPOST : Check a Password and change
 func AccountPOST(c echo.Context) error {
-	// 새로운 비밀번호와 새로운 비밀번호 확인이 다를 때
-	if c.FormValue("newPassword") != c.FormValue("newPasswordCheck") {
-		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status=equalError")
-	}
 	session := session.Default(c)
 	err := models.ChangePassword(session.Get("studentNumber").(string), c.FormValue("loginPassword"), c.FormValue("newPassword"))
 	// 비번 변경 실패
 	if err != nil {
-		return c.Redirect(http.StatusMovedPermanently, "/user/account?status="+err.Error())
+		return c.String(http.StatusOK, err.Error())
 	}
 	// 비밀번호 변경 성공
-	return c.Redirect(http.StatusMovedPermanently, "/user/account?status=success")
+	return c.String(http.StatusOK, "success")
+}
 
+// ChangeSuccess : 변경 완료 페이지
+func ChangeSuccess(c echo.Context) error {
+	return c.Render(http.StatusOK, "changeSuccess", nil)
 }
 
 // GetHolydaysAPI : 공휴일 정보 가져오기 API
