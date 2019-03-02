@@ -73,15 +73,21 @@ func main() {
 	// 신청하기 - 신청완료
 	e.GET("/apply/success", controller.ApplySuccess, controller.AuthAPI)
 
-	// ChangePassword Page
-	e.GET("/user/changePassword", controller.ChangePassword, controller.AuthAPI)
-	e.POST("/user/changePassword", controller.ChangePasswordPost, controller.AuthAPI)
+	// 내정보
+	e.GET("/user/", controller.MyPage, controller.AuthAPI)
+	// 내정보 - 신청내역
+	e.GET("/user/history", controller.ApplyHistory, controller.AuthAPI)
+	// 내정보 - 계정관리
+	e.GET("/user/account", controller.Account, controller.AuthAPI)
+	e.POST("/user/account", controller.AccountPOST, controller.AuthAPI)
 
 	// ================ 학생 API ================
 	// 신청하기
 	e.POST("/api/apply", controller.ApplyAPI, controller.AuthAPI)
 	// 자신의 신청내역 가져오기
 	e.GET("/api/getApplys", controller.GetApplysAPI, controller.AuthAPI)
+	// 구역 신청내역 가져오기
+	e.GET("/api/getApplysOfArea", controller.GetApplysOfAreaAPI, controller.AuthAPI)
 	// 구역 신청 인원 수 가져오기
 	e.GET("/api/getApplyMountOfArea", controller.GetApplyMountOfAreaAPI, controller.AuthAPI)
 	// 신청 취소하기

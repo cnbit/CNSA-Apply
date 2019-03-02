@@ -194,6 +194,16 @@ func GetApplysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetApplysByStudentNumber(session.Default(c).Get("studentNumber").(string)))
 }
 
+// GetApplysOfAreaAPI 구역 신청내역 가져오기
+func GetApplysOfAreaAPI(c echo.Context) error {
+	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
+	if err != nil {
+		// TODO: http code 추후 정리
+		return c.String(http.StatusOK, err.Error())
+	}
+	return c.JSON(http.StatusOK, models.GetApplys(day, c.QueryParam("period"), c.QueryParam("form"), c.QueryParam("area")))
+}
+
 // GetApplyMountOfAreaAPI 구역 신청 인원 수 가져오기
 func GetApplyMountOfAreaAPI(c echo.Context) error {
 	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
@@ -208,6 +218,7 @@ func CancelApplyAPI(c echo.Context) error {
 	session := session.Default(c)
 	day, err := time.Parse("2006-01-02", c.FormValue("date"))
 	if err != nil {
+		// TODO: http code 추후 정리
 		return c.String(http.StatusOK, err.Error())
 	}
 
@@ -219,13 +230,25 @@ func CancelApplyAPI(c echo.Context) error {
 	return c.String(http.StatusOK, "success")
 }
 
-// ChangePassword : ChangePassword page
-func ChangePassword(c echo.Context) error {
-	return c.Render(http.StatusOK, "changePassword", nil)
+// MyPage : 내 정보 page
+func MyPage(c echo.Context) error {
+	return c.Render(http.StatusOK, "myPage", nil)
 }
 
-// ChangePasswordPost : Check a Password and change
-func ChangePasswordPost(c echo.Context) error {
+// ApplyHistory : 신청내역 page
+func ApplyHistory(c echo.Context) error {
+	return c.Render(http.StatusOK, "applyHistory", nil)
+}
+
+// Account : ChangePassword page
+func Account(c echo.Context) error {
+	return c.Render(http.StatusOK, "account", map[string]interface{}{
+		"status": c.QueryParam("status"),
+	})
+}
+
+// AccountPOST : Check a Password and change
+func AccountPOST(c echo.Context) error {
 	// 새로운 비밀번호와 새로운 비밀번호 확인이 다를 때
 	if c.FormValue("newPassword") != c.FormValue("newPasswordCheck") {
 		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status=equalError")
@@ -234,10 +257,10 @@ func ChangePasswordPost(c echo.Context) error {
 	err := models.ChangePassword(session.Get("studentNumber").(string), c.FormValue("loginPassword"), c.FormValue("newPassword"))
 	// 비번 변경 실패
 	if err != nil {
-		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status="+err.Error())
+		return c.Redirect(http.StatusMovedPermanently, "/user/account?status="+err.Error())
 	}
 	// 비밀번호 변경 성공
-	return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status=success")
+	return c.Redirect(http.StatusMovedPermanently, "/user/account?status=success")
 
 }
 
