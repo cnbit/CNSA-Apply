@@ -71,7 +71,7 @@ func main() {
 	e.GET("/apply/selectSeatF", controller.SelectSeatF, controller.AuthAPI)
 	e.GET("/apply/selectSeatG", controller.SelectSeatG, controller.AuthAPI)
 	// 신청하기 - 신청완료
-	e.GET("/apply/success", controller.ApplySuccess, controller.AuthAPI)
+	e.GET("/apply/applySuccess", controller.ApplySuccess, controller.AuthAPI)
 
 	// 내정보
 	e.GET("/user/", controller.MyPage, controller.AuthAPI)
@@ -80,6 +80,7 @@ func main() {
 	// 내정보 - 계정관리
 	e.GET("/user/account", controller.Account, controller.AuthAPI)
 	e.POST("/user/account", controller.AccountPOST, controller.AuthAPI)
+	e.GET("/user/changeSuccess", controller.ChangeSuccess, controller.AuthAPI)
 
 	// ================ 학생 API ================
 	// 신청하기
