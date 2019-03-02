@@ -165,8 +165,12 @@ func AddApply(studentNumber string, name string, day time.Time, period string, f
 	}).Error
 
 	if err != nil {
-		if err.Error()[:9] != "Error 1062" {
+		if err.Error()[30] == '-' {
+			// 좌석이 이미 신청 되어 있을 때
 			err = errors.New("The seat was applied")
+		} else {
+			// 그 시간에 이미 신청 되어 있을 때
+			err = errors.New("you have already applied the period")
 		}
 	}
 
