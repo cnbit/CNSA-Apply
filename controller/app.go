@@ -219,13 +219,25 @@ func CancelApplyAPI(c echo.Context) error {
 	return c.String(http.StatusOK, "success")
 }
 
-// ChangePassword : ChangePassword page
-func ChangePassword(c echo.Context) error {
-	return c.Render(http.StatusOK, "changePassword", nil)
+// MyPage : 내 정보 page
+func MyPage(c echo.Context) error {
+	return c.Render(http.StatusOK, "myPage", nil)
 }
 
-// ChangePasswordPost : Check a Password and change
-func ChangePasswordPost(c echo.Context) error {
+// History : 신청내역 page
+func History(c echo.Context) error {
+	return c.Render(http.StatusOK, "history", nil)
+}
+
+// Account : ChangePassword page
+func Account(c echo.Context) error {
+	return c.Render(http.StatusOK, "account", map[string]interface{}{
+		"status": c.QueryParam("status"),
+	})
+}
+
+// AccountPOST : Check a Password and change
+func AccountPOST(c echo.Context) error {
 	// 새로운 비밀번호와 새로운 비밀번호 확인이 다를 때
 	if c.FormValue("newPassword") != c.FormValue("newPasswordCheck") {
 		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status=equalError")
@@ -234,10 +246,10 @@ func ChangePasswordPost(c echo.Context) error {
 	err := models.ChangePassword(session.Get("studentNumber").(string), c.FormValue("loginPassword"), c.FormValue("newPassword"))
 	// 비번 변경 실패
 	if err != nil {
-		return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status="+err.Error())
+		return c.Redirect(http.StatusMovedPermanently, "/user/account?status="+err.Error())
 	}
 	// 비밀번호 변경 성공
-	return c.Redirect(http.StatusMovedPermanently, "/user/changePassword?status=success")
+	return c.Redirect(http.StatusMovedPermanently, "/user/account?status=success")
 
 }
 
