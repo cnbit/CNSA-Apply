@@ -102,3 +102,13 @@ func AdminGetApplyMountAPI(c echo.Context) error {
 	}
 	return c.String(http.StatusOK, strconv.Itoa(models.GetApplyMount(day, c.QueryParam("period"), c.QueryParam("form"))))
 }
+
+// AdminGetAllHolydayAPI : 공휴일 정보 모두 가져오기
+func AdminGetAllHolydayAPI(c echo.Context) error {
+	return c.JSON(http.StatusOK, models.GetHolydays())
+}
+
+// AdminGetTimeTableHolydaysAPI : 공휴일 정보 1주일치 가져오기
+func AdminGetTimeTableHolydaysAPI(c echo.Context) error {
+	return c.JSON(http.StatusOK, models.GetTimeTableHolydays())
+}
