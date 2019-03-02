@@ -86,6 +86,8 @@ func main() {
 	e.POST("/api/apply", controller.ApplyAPI, controller.AuthAPI)
 	// 자신의 신청내역 가져오기
 	e.GET("/api/getApplys", controller.GetApplysAPI, controller.AuthAPI)
+	// 구역 신청내역 가져오기
+	e.GET("/api/getApplysOfArea", controller.GetApplysOfAreaAPI, controller.AuthAPI)
 	// 구역 신청 인원 수 가져오기
 	e.GET("/api/getApplyMountOfArea", controller.GetApplyMountOfAreaAPI, controller.AuthAPI)
 	// 신청 취소하기

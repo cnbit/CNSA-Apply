@@ -194,6 +194,16 @@ func GetApplysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetApplysByStudentNumber(session.Default(c).Get("studentNumber").(string)))
 }
 
+// GetApplysOfAreaAPI 구역 신청내역 가져오기
+func GetApplysOfAreaAPI(c echo.Context) error {
+	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
+	if err != nil {
+		// TODO: http code 추후 정리
+		return c.String(http.StatusOK, err.Error())
+	}
+	return c.JSON(http.StatusOK, models.GetApplys(day, c.QueryParam("period"), c.QueryParam("form"), c.QueryParam("area")))
+}
+
 // GetApplyMountOfAreaAPI 구역 신청 인원 수 가져오기
 func GetApplyMountOfAreaAPI(c echo.Context) error {
 	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
