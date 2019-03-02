@@ -73,6 +73,11 @@ func AdminSelectForm(c echo.Context) error {
 	})
 }
 
+// AdminBView : 자율관 신청내역 보기 Page
+func AdminBView(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminBView", nil)
+}
+
 // AdminCancelHolydayAPI 공휴일 취소 API
 func AdminCancelHolydayAPI(c echo.Context) error {
 	day, err := time.Parse("2006-01-02", c.FormValue("date"))
@@ -90,7 +95,11 @@ func AdminCancelHolydayAPI(c echo.Context) error {
 
 // AdminGetApplysAPI 신청내역 가져오기 API
 func AdminGetApplysAPI(c echo.Context) error {
-	return c.JSON(http.StatusOK, models.GetApplys(time.Now(), c.QueryParam("period"), c.QueryParam("form"), c.QueryParam("area")))
+	date, err := time.Parse("2006-01-02", c.FormValue("date"))
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+	return c.JSON(http.StatusOK, models.GetApplys(date, c.QueryParam("period"), c.QueryParam("form"), c.QueryParam("area")))
 }
 
 // AdminAddHolydayAPI 공휴일 추가하기

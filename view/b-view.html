@@ -1,0 +1,60 @@
+[[define "adminBView"]]
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/admin.css" type="text/css">
+
+    <!-- Vue.js -->
+    <script src="/assets/js/vue.min.js" type="text/javascript"></script>
+    <script src="/assets/js/vue-resource.min.js" type="text/javascript"></script>
+
+    <!-- JQuery -->
+    <script src="/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
+
+    <!-- Custom scripts -->
+    <script src="/assets/js/script.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <h1>신청내역 페이지</h1>
+    <div id="apply-list" class="apply-list">
+        <div class="apply-list-item">
+            <div>날짜</div>
+            <div>학번</div>
+            <div>이름</div>
+        </div>
+        <div style="content: ''; display: table; clear: both;"></div>
+        <template v-for="(apply, $index) in applys">
+            <div class="apply-list-item">
+                <div>{{apply.date.substring(0, 10) + " - " + (apply.period == "7" ? "7교시" : apply.period)}}</div>
+                <div>{{apply.studentNumber}}</div>
+                <div>{{apply.name}}</div>
+            </div>
+            <div style="content: ''; display: table; clear: both;"></div>
+        </template>
+    </div>
+
+    <!-- Vue.js Script -->
+    <script>
+        new Vue({
+            el: '#apply-list',
+
+            data: {
+                applys: [],
+            },
+
+            // This is run whenever the page is loaded to make sure we have a current content list
+            created: function () {
+                // Use the vue-resource $http client to fetch data from the /contents route
+                this.$http.get('/admin/api/getApplys?date='+getParameterByName("date")+"&period="+getParameterByName("period")+"&form=B").then(function (response) {
+                    this.applys = response.data ? response.data : [];
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
+[[end]]

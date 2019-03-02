@@ -1,0 +1,16 @@
+.apply-list-item {
+    margin: 5px;
+    text-align: center;
+}
+.apply-list-item > div {
+    float: left;
+}
+.apply-list-item > div:nth-child(1) {
+    width: 150px;
+}
+.apply-list-item > div:nth-child(2) {
+    width: 80px;
+}
+.apply-list-item > div:nth-child(3) {
+    width: 70px;
+}

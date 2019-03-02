@@ -32,7 +32,7 @@ func init() {
 
 // Apply models
 type Apply struct {
-	StudentNumber string    `gorm:"type:VARCHAR(6); primary_key" json:"student-number"`
+	StudentNumber string    `gorm:"type:VARCHAR(6); primary_key" json:"studentNumber"`
 	Name          string    `gorm:"type:VARCHAR(50)" json:"name"`
 	Date          time.Time `gorm:"type:DATE; primary_key; unique_index" json:"date"`
 	Period        string    `gorm:"type:VARCHAR(6); primary_key; unique_index" json:"period"`
