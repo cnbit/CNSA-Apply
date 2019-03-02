@@ -34,6 +34,7 @@ func init() {
 type Apply struct {
 	StudentNumber string    `gorm:"type:VARCHAR(6); primary_key" json:"studentNumber"`
 	Name          string    `gorm:"type:VARCHAR(50)" json:"name"`
+	Gender        int       `gorm:"type:INT" json:"gender"`
 	Date          time.Time `gorm:"type:DATE; primary_key; unique_index" json:"date"`
 	Period        string    `gorm:"type:VARCHAR(6); primary_key; unique_index" json:"period"`
 	Form          string    `gorm:"type:VARCHAR(1)" json:"form"`
@@ -153,20 +154,51 @@ func GetTimeTableDays() [5]time.Time {
 // AddApply 비어있는 좌석에 신청
 // 같은 사람이 같은 시간에 신청은 선택할 때 방지
 // 발생 가능한 오류는 비슷한 시간대에 동일한 좌석에 신청
-func AddApply(studentNumber string, name string, day time.Time, period string, form string, area string, seat string) error {
-	err := db.Create(&Apply{
-		StudentNumber: studentNumber,
-		Name:          name,
-		Date:          day,
-		Period:        period,
-		Form:          form,
-		Area:          area,
-		Seat:          seat,
-	}).Error
+func AddApply(studentNumber string, name string, gender int, day time.Time, period string, form string, area string, seat string) error {
+	var err error
+	if gender == 0 {
+		// 남자일 경우
+		if GetApplyMountByGender(day, period, gender) < 150 {
+			err = db.Create(&Apply{
+				StudentNumber: studentNumber,
+				Name:          name,
+				Gender:        gender,
+				Date:          day,
+				Period:        period,
+				Form:          form,
+				Area:          area,
+				Seat:          seat,
+			}).Error
 
-	if err != nil {
-		if err.Error()[:9] != "Error 1062" {
-			err = errors.New("The seat was applied")
+			if err != nil {
+				if err.Error()[:9] != "Error 1062" {
+					err = errors.New("The seat was applied")
+				}
+			}
+		} else {
+			err = errors.New("신청 가능 인원을 초과했습니다")
+		}
+	} else {
+		// 여자일 경우
+		if GetApplyMountByGender(day, period, gender) < 200 {
+			err = db.Create(&Apply{
+				StudentNumber: studentNumber,
+				Name:          name,
+				Gender:        gender,
+				Date:          day,
+				Period:        period,
+				Form:          form,
+				Area:          area,
+				Seat:          seat,
+			}).Error
+
+			if err != nil {
+				if err.Error()[:9] != "Error 1062" {
+					err = errors.New("The seat was applied")
+				}
+			}
+		} else {
+			err = errors.New("신청 가능 인원을 초과했습니다")
 		}
 	}
 
@@ -199,10 +231,17 @@ func GetApplyMount(day time.Time, period string, form string) int {
 	return count
 }
 
-// GetApplyMountOfArea 특정 시간, 구역의 신청 수를 반환함
-func GetApplyMountOfArea(day time.Time, period string, area string) int {
+// GetApplyMountByArea 특정 시간, 구역의 신청 수를 반환함
+func GetApplyMountByArea(day time.Time, period string, area string) int {
 	var count int
-	db.Table("applys").Where("date = ? AND period = ? AND form = A AND area = ?", day.Format("2006-01-02"), period, area).Count(&count)
+	db.Table("applys").Where("date = ? AND period = ? AND form = 'A' AND area = ?", day.Format("2006-01-02"), period, area).Count(&count)
+	return count
+}
+
+// GetApplyMountByGender 특정 시간, 구역의 신청 수를 반환함
+func GetApplyMountByGender(day time.Time, period string, gender int) int {
+	var count int
+	db.Table("applys").Where("date = ? AND period = ? AND form = 'B' AND gender = ?", day.Format("2006-01-02"), period, gender).Count(&count)
 	return count
 }
 
