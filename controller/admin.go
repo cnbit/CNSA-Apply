@@ -65,6 +65,14 @@ func AdminSelectTime(c echo.Context) error {
 	return c.Render(http.StatusOK, "adminSelectTime", nil)
 }
 
+// AdminSelectForm : 면학실 선택 Page
+func AdminSelectForm(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminSelectForm", map[string]interface{}{
+		"date":   c.QueryParam("date"),
+		"period": c.QueryParam("period"),
+	})
+}
+
 // AdminCancelHolydayAPI 공휴일 취소 API
 func AdminCancelHolydayAPI(c echo.Context) error {
 	day, err := time.Parse("2006-01-02", c.FormValue("date"))

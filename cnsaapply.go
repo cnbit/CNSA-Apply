@@ -112,8 +112,10 @@ func main() {
 	// 메인 페이지
 	a.GET("/", controller.AdminIndex)
 
-	// 신청현황
+	// 신청현황 - 시간대 선택
 	a.GET("/apply/", controller.AdminSelectTime)
+	// 신청현황 - 면학실 선택
+	a.GET("/apply/selectForm", controller.AdminSelectForm)
 
 	// ================ 교사 API ================
 	// 당일의 학생들 신청내역 가져오기 by period, form, area
