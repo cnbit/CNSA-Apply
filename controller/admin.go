@@ -112,3 +112,7 @@ func AdminGetAllHolydayAPI(c echo.Context) error {
 func AdminGetTimeTableHolydaysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetTimeTableHolydays())
 }
+
+func AdminHolyday(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminHolyday", nil)
+}

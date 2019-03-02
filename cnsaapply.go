@@ -110,6 +110,8 @@ func main() {
 
 	// 메인 페이지
 	a.GET("/", controller.AdminIndex)
+	// 공휴일 관리 페이지
+	a.GET("/holydays", controller.AdminHolyday)
 
 	// ================ 교사 API ================
 	// 당일의 학생들 신청내역 가져오기 by period, form, area
@@ -125,6 +127,7 @@ func main() {
 	a.GET("/api/getAllHolydays", controller.AdminGetAllHolydayAPI)
 	// 공휴일 1주일치 가져오기
 	a.GET("/api/getTimeTableHolydays", controller.AdminGetTimeTableHolydaysAPI)
+
 	// Start web server
 	e.Start(":80")
 }
