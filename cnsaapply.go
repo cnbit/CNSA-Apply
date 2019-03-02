@@ -129,6 +129,9 @@ func main() {
 	// 신청현황 - 자율관 신청현황 보기
 	a.GET("/apply/b-view", controller.AdminBView)
 
+	// 공휴일 관리
+	a.GET("/holydays", controller.AdminHolydays)
+
 	// ================ 교사 API ================
 	// 당일의 학생들 신청내역 가져오기 by period, form, area
 	a.GET("/api/getApplys", controller.AdminGetApplysAPI)

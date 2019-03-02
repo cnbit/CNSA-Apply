@@ -121,6 +121,11 @@ func AdminBView(c echo.Context) error {
 	return c.Render(http.StatusOK, "adminBView", nil)
 }
 
+// AdminHolydays : 공휴일 관리 Page
+func AdminHolydays(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminHolydays", nil)
+}
+
 // AdminCancelHolydayAPI 공휴일 취소 API
 func AdminCancelHolydayAPI(c echo.Context) error {
 	day, err := time.Parse("2006-01-02", c.FormValue("date"))
