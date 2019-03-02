@@ -56,14 +56,14 @@
 
             if (now.getDay() == 0) {
                 // 일요일이면 하루 더함
-                days[0] = new Date(days[0].getTime() + 86400000);
+                days[0] = new Date(days[0].getTime() + 86400000 * 2);
                 days[1] = new Date(days[0].getTime() + 86400000);
                 days[2] = new Date(days[1].getTime() + 86400000);
                 days[3] = new Date(days[2].getTime() + 86400000);
                 days[4] = new Date(days[3].getTime() + 86400000);
             } else if (now.getDay() == 6) {
                 // 토요일이면 2일 더함
-                days[0] = new Date(days[0].getTime() + 86400000 * 2);
+                days[0] = new Date(days[0].getTime() + 86400000 * 3);
                 days[1] = new Date(days[0].getTime() + 86400000);
                 days[2] = new Date(days[1].getTime() + 86400000);
                 days[3] = new Date(days[2].getTime() + 86400000);
@@ -93,7 +93,10 @@
                 location.href = "/apply/selectArea"
             } else {
                 // 자율관 신청
+                // 마지막인지 검사를 위해 사용하는 변수
+                var itemsProcessed = 0;
                 array.forEach(function (time) {
+                    itemsProcessed++;
                     index = 0;
                     time = split(time, "-");
                     if (time[0] == "mon") {
@@ -109,32 +112,33 @@
                     }
 
                     day = GetTimeTableDays()[index];
-                    yyyymmdd = [day.getUTCFullYear(), 
-                    "-",
-                    (day.getUTCMonth() + 1 > 9 ? '' : '0') + (day.getUTCMonth() + 1), 
-                    "-",
+                    yyyymmdd = [day.getUTCFullYear(),
+                        "-",
+                    (day.getUTCMonth() + 1 > 9 ? '' : '0') + (day.getUTCMonth() + 1),
+                        "-",
                     (day.getUTCDate() > 9 ? '' : '0') + day.getUTCDate()].join('');
                     $.post("/api/apply", {
                         date: yyyymmdd,
                         period: time[1],
                         form: "B",
                     }, function (data) {
-                        /*
-                    if (data == "success") {
-                        sessionStorage.removeItem('time');
-    
-                        if (sessionStorage.times == null) {
+                        if (itemsProcessed == array.length) {
                             location.href = "/apply/success"
-                        } else {
-                            location.href = "/apply/selectArea"
                         }
-                    } else {
-                        // TODO: 에러 메세지 세분화
-                    }*/
+                        /*
+                        if (data == "success") {
+                            sessionStorage.removeItem('time');
+        
+                            if (sessionStorage.times == null) {
+                                location.href = "/apply/success"
+                            } else {
+                                location.href = "/apply/selectArea"
+                            }
+                        } else {
+                            // TODO: 에러 메세지 세분화
+                        }*/
                     });
                 });
-
-                location.href = "/apply/success"
             }
         }
 

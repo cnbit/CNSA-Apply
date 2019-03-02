@@ -208,6 +208,7 @@ func CancelApplyAPI(c echo.Context) error {
 	session := session.Default(c)
 	day, err := time.Parse("2006-01-02", c.FormValue("date"))
 	if err != nil {
+		// TODO: http code 추후 정리
 		return c.String(http.StatusOK, err.Error())
 	}
 
