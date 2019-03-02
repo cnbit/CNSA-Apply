@@ -73,6 +73,49 @@ func AdminSelectForm(c echo.Context) error {
 	})
 }
 
+// AdminSelectArea : 면학실 선택 Page
+func AdminSelectArea(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminSelectArea", map[string]interface{}{
+		"date":   c.QueryParam("date"),
+		"period": c.QueryParam("period"),
+	})
+}
+
+// AdminAViewA : 창학관 신청내역 보기 Page
+func AdminAViewA(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminAViewA", nil)
+}
+
+// AdminAViewB : 창학관 신청내역 보기 Page
+func AdminAViewB(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminAViewB", nil)
+}
+
+// AdminAViewC : 창학관 신청내역 보기 Page
+func AdminAViewC(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminAViewC", nil)
+}
+
+// AdminAViewD : 창학관 신청내역 보기 Page
+func AdminAViewD(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminAViewD", nil)
+}
+
+// AdminAViewE : 창학관 신청내역 보기 Page
+func AdminAViewE(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminAViewE", nil)
+}
+
+// AdminAViewF : 창학관 신청내역 보기 Page
+func AdminAViewF(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminAViewF", nil)
+}
+
+// AdminAViewG : 창학관 신청내역 보기 Page
+func AdminAViewG(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminAViewG", nil)
+}
+
 // AdminBView : 자율관 신청내역 보기 Page
 func AdminBView(c echo.Context) error {
 	return c.Render(http.StatusOK, "adminBView", nil)

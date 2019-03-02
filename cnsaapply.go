@@ -116,6 +116,16 @@ func main() {
 	a.GET("/apply/", controller.AdminSelectTime)
 	// 신청현황 - 면학실 선택
 	a.GET("/apply/selectForm", controller.AdminSelectForm)
+	// 신청현황 - 창학관 구역 선택
+	a.GET("/apply/selectArea", controller.AdminSelectArea)
+	// 신청현황 - 창학관 신청현황 보기
+	a.GET("/apply/a-viewA", controller.AdminAViewA)
+	a.GET("/apply/a-viewB", controller.AdminAViewB)
+	a.GET("/apply/a-viewC", controller.AdminAViewC)
+	a.GET("/apply/a-viewD", controller.AdminAViewD)
+	a.GET("/apply/a-viewE", controller.AdminAViewE)
+	a.GET("/apply/a-viewF", controller.AdminAViewF)
+	a.GET("/apply/a-viewG", controller.AdminAViewG)
 	// 신청현황 - 자율관 신청현황 보기
 	a.GET("/apply/b-view", controller.AdminBView)
 
