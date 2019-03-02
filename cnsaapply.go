@@ -112,6 +112,26 @@ func main() {
 	// 메인 페이지
 	a.GET("/", controller.AdminIndex)
 
+	// 신청현황 - 시간대 선택
+	a.GET("/apply/", controller.AdminSelectTime)
+	// 신청현황 - 면학실 선택
+	a.GET("/apply/selectForm", controller.AdminSelectForm)
+	// 신청현황 - 창학관 구역 선택
+	a.GET("/apply/selectArea", controller.AdminSelectArea)
+	// 신청현황 - 창학관 신청현황 보기
+	a.GET("/apply/a-viewA", controller.AdminAViewA)
+	a.GET("/apply/a-viewB", controller.AdminAViewB)
+	a.GET("/apply/a-viewC", controller.AdminAViewC)
+	a.GET("/apply/a-viewD", controller.AdminAViewD)
+	a.GET("/apply/a-viewE", controller.AdminAViewE)
+	a.GET("/apply/a-viewF", controller.AdminAViewF)
+	a.GET("/apply/a-viewG", controller.AdminAViewG)
+	// 신청현황 - 자율관 신청현황 보기
+	a.GET("/apply/b-view", controller.AdminBView)
+
+	// 공휴일 관리
+	a.GET("/holydays", controller.AdminHolydays)
+
 	// ================ 교사 API ================
 	// 당일의 학생들 신청내역 가져오기 by period, form, area
 	a.GET("/api/getApplys", controller.AdminGetApplysAPI)

@@ -59,6 +59,7 @@
                 for(i = 0; i < 5; i++) {
                     if(days[i].yyyymmdd() == apply.date.substring(0, 10)){
                         $("#" + i + "-" + apply.period).prop("disabled", true);
+                        break;
                     }
                 }
             });
