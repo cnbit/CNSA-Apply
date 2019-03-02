@@ -176,12 +176,8 @@ func ApplySuccess(c echo.Context) error {
 // ApplyAPI 신청정보 등록
 func ApplyAPI(c echo.Context) error {
 	session := session.Default(c)
-	day, err := time.Parse("2006-01-02", c.FormValue("date"))
-	if err != nil {
-		return c.String(http.StatusOK, err.Error())
-	}
 
-	err = models.AddApply(session.Get("studentNumber").(string), session.Get("name").(string), day, c.FormValue("period"), c.FormValue("form"), c.FormValue("area"), c.FormValue("seat"))
+	err = models.AddApply(session.Get("studentNumber").(string), session.Get("name").(string), c.FormValue("date"), c.FormValue("period"), c.FormValue("form"), c.FormValue("area"), c.FormValue("seat"))
 	if err != nil {
 		return c.String(http.StatusOK, err.Error())
 	}
