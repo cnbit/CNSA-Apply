@@ -113,6 +113,21 @@ func AdminGetTimeTableHolydaysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetTimeTableHolydays())
 }
 
+// AdminHolyday : 공휴일 페이지
 func AdminHolyday(c echo.Context) error {
 	return c.Render(http.StatusOK, "adminHolyday", nil)
+}
+
+// AdminSelectTime : 신청 현황 시간대 선택
+func AdminSelectTime(c echo.Context) error {
+	return c.Render(http.StatusOK, "adminSelectTime", map[string]interface{}{
+		"7-A":   models.GetApplyMount(time.Now(), "7", "A"),
+		"CAS-A": models.GetApplyMount(time.Now(), "CAS", "A"),
+		"EP1-A": models.GetApplyMount(time.Now(), "EP1", "A"),
+		"EP2-A": models.GetApplyMount(time.Now(), "EP2", "A"),
+		"7-B":   models.GetApplyMount(time.Now(), "7", "B"),
+		"CAS-B": models.GetApplyMount(time.Now(), "CAS", "B"),
+		"EP1-B": models.GetApplyMount(time.Now(), "EP1", "B"),
+		"EP2-B": models.GetApplyMount(time.Now(), "EP2", "B"),
+	})
 }

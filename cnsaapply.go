@@ -112,6 +112,8 @@ func main() {
 	a.GET("/", controller.AdminIndex)
 	// 공휴일 관리 페이지
 	a.GET("/holydays", controller.AdminHolyday)
+	// 신청 현황 - 시간대 선택
+	a.GET("/apply", controller.AdminSelectTime)
 
 	// ================ 교사 API ================
 	// 당일의 학생들 신청내역 가져오기 by period, form, area

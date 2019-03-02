@@ -1,0 +1,32 @@
+[[define "adminSelectTime"]]
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <h1>교사 신청 현황 페이지</h1>
+    <h1>시간대 선택</h1>
+    <form method="POST">
+        <input type="button" name="times" onclick="select7()">[[index . "7-A"]] / X AND [[index . "7-B"]] / X (7교시)
+        <input type="button" name="times" onclick="selectCAS()">[[index . "CAS-A"]] / X AND [[index . "CAS-B"]] / X (CAS)
+        <input type="button" name="times" onclick="selectEP1()">[[index . "EP1-A"]] / X AND [[index . "EP1-B"]] / X (EP1)
+        <input type="button" name="times" onclick="selectEP2()">[[index . "EP2-A"]] / X AND [[index . "EP2-B"]] / X (EP2)
+        <br/>
+    </form>
+    <script>
+        function select7() {
+            location.href = "/admin/apply/selectForm?period=7"
+        }
+        function selectCAS() {
+            location.href = "/admin/apply/selectForm?period=CAS"
+        }
+        function selectEP1() {
+            location.href = "/admin/apply/selectForm?period=EP1"
+        }
+        function selectEP2() {
+            location.href = "/admin/apply/selectForm?period=EP2"
+        }
+     </script>
+</body>
+</html>
+[[end]]
