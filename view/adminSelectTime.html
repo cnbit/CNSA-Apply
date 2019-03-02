@@ -1,0 +1,84 @@
+[[define "adminSelectTime"]]
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- JQuery -->
+    <script src="/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
+
+    <!-- Custom scripts -->
+    <script src="/assets/js/script.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <h1>시간대 선택</h1>
+    <form method="POST">
+        <h3>월요일</h3>
+        <label><input id="0-7" type="radio" name="times" value="mon-7">7교시</label>
+        <label><input id="0-CAS" type="radio" name="times" value="mon-CAS">CAS</label>
+        <label><input id="0-EP1" type="radio" name="times" value="mon-EP1">EP1</label>
+        <label><input id="0-EP2" type="radio" name="times" value="mon-EP2">EP2</label>
+        <br />
+
+        <h3>화요일</h3>
+        <label><input id="1-7" type="radio" name="times" value="tue-7">7교시</label>
+        <label><input id="1-CAS" type="radio" name="times" value="tue-CAS">CAS</label>
+        <label><input id="1-EP1" type="radio" name="times" value="tue-EP1">EP1</label>
+        <label><input id="1-EP2" type="radio" name="times" value="tue-EP2">EP2</label>
+        <br />
+
+        <h3>수요일</h3>
+        <label><input id="2-7" type="radio" name="times" value="wed-7">7교시</label>
+        <label><input id="2-CAS" type="radio" name="times" value="wed-CAS">CAS</label>
+        <label><input id="2-EP1" type="radio" name="times" value="wed-EP1">EP1</label>
+        <label><input id="2-EP2" type="radio" name="times" value="wed-EP2">EP2</label>
+        <br />
+
+        <h3>목요일</h3>
+        <label><input id="3-7" type="radio" name="times" value="thr-7">7교시</label>
+        <label><input id="3-CAS" type="radio" name="times" value="thr-CAS">CAS</label>
+        <label><input id="3-EP1" type="radio" name="times" value="thr-EP1">EP1</label>
+        <label><input id="3-EP2" type="radio" name="times" value="thr-EP2">EP2</label>
+        <br />
+
+        <h3>금요일</h3>
+        <label><input id="4-7" type="radio" name="times" value="fri-7">7교시</label>
+        <label><input id="4-CAS" type="radio" name="times" value="fri-CAS">CAS</label>
+        <label><input id="4-EP1" type="radio" name="times" value="fri-EP1">EP1</label>
+        <label><input id="4-EP2" type="radio" name="times" value="fri-EP2">EP2</label>
+        <br />
+        <br />
+        <button name="submit" type="button" onclick="select()">선택</button>
+    </form>
+
+    <script>
+        // 선택 완료
+        function select() {
+            var radios = document.getElementsByName('times');
+            for (var i = 0, length = radios.length; i < length; i++) {
+                if (radios[i].checked) {
+                    time = radios[i].value;
+                    index = 0;
+                    time = split(time, "-");
+                    if (time[0] == "mon") {
+                        index = 0;
+                    } else if (time[0] == "tue") {
+                        index = 1;
+                    } else if (time[0] == "wed") {
+                        index = 2;
+                    } else if (time[0] == "thr") {
+                        index = 3;
+                    } else if (time[0] == "fri") {
+                        index = 4;
+                    }
+
+                    location.href = "/admin/apply/selectForm?date="+GetTimeTableDays()[index].yyyymmdd()+"&period="+time[1];
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
+[[end]]

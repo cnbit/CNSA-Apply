@@ -1,0 +1,136 @@
+[[define "adminAViewA"]]
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/admin.css" type="text/css">
+
+    <!-- Vue.js -->
+    <script src="/assets/js/vue.min.js" type="text/javascript"></script>
+    <script src="/assets/js/vue-resource.min.js" type="text/javascript"></script>
+
+    <!-- JQuery -->
+    <script src="/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
+
+    <!-- Custom scripts -->
+    <script src="/assets/js/script.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <h1>창학관 A구역 신청현황 페이지</h1>
+    <div id="1" type="div" class="seat"></div>
+    <div id="2" type="div" class="seat"></div>
+    <div id="3" type="div" class="seat"></div>
+    <div id="4" type="div" class="seat"></div>
+    <div id="5" type="div" class="seat right-end"></div>
+
+    <div id="6" type="div" class="seat"></div>
+    <div id="7" type="div" class="seat"></div>
+    <div id="8" type="div" class="seat"></div>
+    <div id="9" type="div" class="seat"></div>
+    <div id="10" type="div" class="seat"></div>
+    <div id="11" type="div" class="seat"></div>
+    <div style="content: ''; display: table; clear: both;"></div>
+
+    <div id="12" type="div" class="seat"></div>
+    <div id="13" type="div" class="seat"></div>
+    <div id="14" type="div" class="seat"></div>
+    <div id="15" type="div" class="seat"></div>
+    <div id="16" type="div" class="seat right-end"></div>
+
+    <div id="17" type="div" class="seat"></div>
+    <div id="18" type="div" class="seat"></div>
+    <div id="19" type="div" class="seat"></div>
+    <div id="20" type="div" class="seat"></div>
+    <div id="21" type="div" class="seat"></div>
+    <div id="22" type="div" class="seat"></div>
+    <div style="content: ''; display: table; clear: both;"></div>
+    <br>
+
+    <div id="23" type="div" class="seat"></div>
+    <div id="24" type="div" class="seat"></div>
+    <div id="25" type="div" class="seat"></div>
+    <div id="26" type="div" class="seat"></div>
+    <div id="27" type="div" class="seat right-end"></div>
+
+    <div id="28" type="div" class="seat"></div>
+    <div id="29" type="div" class="seat"></div>
+    <div id="30" type="div" class="seat"></div>
+    <div id="31" type="div" class="seat"></div>
+    <div id="32" type="div" class="seat"></div>
+    <div id="33" type="div" class="seat"></div>
+    <div style="content: ''; display: table; clear: both;"></div>
+
+    <div id="34" type="div" class="seat"></div>
+    <div id="35" type="div" class="seat"></div>
+    <div id="36" type="div" class="seat"></div>
+    <div id="37" type="div" class="seat"></div>
+    <div id="38" type="div" class="seat right-end"></div>
+
+    <div id="39" type="div" class="seat"></div>
+    <div id="40" type="div" class="seat"></div>
+    <div id="41" type="div" class="seat"></div>
+    <div id="42" type="div" class="seat"></div>
+    <div id="43" type="div" class="seat"></div>
+    <div id="44" type="div" class="seat"></div>
+    <div style="content: ''; display: table; clear: both;"></div>
+    <br>
+
+    <div id="45" type="div" class="seat"></div>
+    <div id="46" type="div" class="seat"></div>
+    <div id="47" type="div" class="seat"></div>
+    <div id="48" type="div" class="seat"></div>
+    <div id="49" type="div" class="seat right-end"></div>
+
+    <div id="50" type="div" class="seat"></div>
+    <div id="51" type="div" class="seat"></div>
+    <div id="52" type="div" class="seat"></div>
+    <div id="53" type="div" class="seat"></div>
+    <div style="content: ''; display: table; clear: both;"></div>
+
+    <div id="54" type="div" class="seat"></div>
+    <div id="55" type="div" class="seat"></div>
+    <div id="56" type="div" class="seat"></div>
+    <div id="57" type="div" class="seat"></div>
+    <div id="58" type="div" class="seat right-end"></div>
+
+    <div id="59" type="div" class="seat"></div>
+    <div id="60" type="div" class="seat"></div>
+    <div id="61" type="div" class="seat"></div>
+    <div id="62" type="div" class="seat"></div>
+    <div style="content: ''; display: table; clear: both;"></div>
+    <br>
+
+    <div id="63" type="div" class="seat"></div>
+    <div id="64" type="div" class="seat"></div>
+    <div id="65" type="div" class="seat"></div>
+    <div id="66" type="div" class="seat"></div>
+    <div id="67" type="div" class="seat right-end"></div>
+
+    <div id="68" type="div" class="seat"></div>
+    <div id="69" type="div" class="seat"></div>
+    <div id="70" type="div" class="seat"></div>
+    <div id="71" type="div" class="seat"></div>
+    <div id="72" type="div" class="seat"></div>
+    <div style="content: ''; display: table; clear: both;"></div>
+
+    <!-- 페이지 로드 시 좌석정보 반영 -->
+    <script>
+        // 신청한 시간대 클릭 안되게 설정
+        $.get("/admin/api/getApplys?date=" + getParameterByName("date") + "&period=" + getParameterByName("period") + "&form=A&area=A", function (applys) {
+            applys.forEach(function (apply) {
+                var days = GetTimeTableDays();
+                for (i = 0; i < 5; i++) {
+                    if (days[i].yyyymmdd() == apply.date.substring(0, 10)) {
+                        $("#" + apply.seat).text(apply.studentNumber + "\n" + apply.name.substring(0, 3));
+                        break;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
+[[end]]

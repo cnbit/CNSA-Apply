@@ -32,12 +32,13 @@ func init() {
 
 // Apply models
 type Apply struct {
-	StudentNumber string    `gorm:"type:VARCHAR(6); primary_key" json:"student-number"`
+	StudentNumber string    `gorm:"type:VARCHAR(6); primary_key" json:"studentNumber"`
 	Name          string    `gorm:"type:VARCHAR(50)" json:"name"`
 	Date          time.Time `gorm:"type:DATE; primary_key; unique_index" json:"date"`
-	Period        string    `gorm:"type:VARCHAR(5); primary_key; unique_index" json:"period"`
+	Period        string    `gorm:"type:VARCHAR(6); primary_key; unique_index" json:"period"`
 	Form          string    `gorm:"type:VARCHAR(1)" json:"form"`
-	Seat          string    `gorm:"type:VARCHAR(6); unique_index" json:"seat"`
+	Area          string    `gorm:"type:VARCHAR(1); default: null" json:"area"`
+	Seat          string    `gorm:"type:VARCHAR(6); default: null; unique_index" json:"seat"`
 }
 
 // TableName of Apply
@@ -70,38 +71,37 @@ func (c *Holyday) TableName() string {
 }
 
 // Login 학생 아이디 인증(SALT)
-func Login(studentNumber string, password string) (bool, string) {
+func Login(studentNumber string, password string) (bool, string, int) {
 	user := User{}
 	err := db.Table("users").Where("student_number = ?", studentNumber).First(&user).Error
 	if err != nil {
-		return false, ""
+		return false, "", -1
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT))
 	if err != nil {
-		return false, ""
+		return false, "", -1
 	}
 
-	return true, user.Name
+	return true, user.Name, user.Gender
 }
 
 // ChangePassword 비밀번호 변경
 func ChangePassword(studentNumber string, password string, newPassword string) error {
-	if len(newPassword) > 30 {
-		// 새로운 비밀번호의 길이가 길 때
-		err := errors.New("Exceed the length")
-		return err
-	} else if newPassword == "" {
-		// 아무것도 입력하지 않았을 때
-		err := errors.New("NewPassword is empty")
-		return err
-	}
 	user := User{}
 	db.Table("users").Where("student_number = ?", studentNumber).First(&user)
 
 	if bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password+SALT)) != nil {
 		// db의 현재 비밀번호와 입력된 현재 비밀번호가 일치하지 않을 때
-		return errors.New("Password is incorrect")
+		return errors.New("비밀번호가 일치하지 않습니다")
+	} else if len(newPassword) > 30 {
+		// 새로운 비밀번호의 길이가 길 때
+		err := errors.New("비밀번호가 너무 깁니다")
+		return err
+	} else if newPassword == "" {
+		// 아무것도 입력하지 않았을 때
+		err := errors.New("비밀번호가 비어있습니다")
+		return err
 	}
 
 	bytes, _ := bcrypt.GenerateFromPassword([]byte(newPassword+SALT), bcrypt.DefaultCost)
@@ -153,22 +153,36 @@ func GetTimeTableDays() [5]time.Time {
 // AddApply 비어있는 좌석에 신청
 // 같은 사람이 같은 시간에 신청은 선택할 때 방지
 // 발생 가능한 오류는 비슷한 시간대에 동일한 좌석에 신청
-func AddApply(studentNumber string, name string, day time.Time, period string, form string, seat string) error {
-	apply := Apply{
+func AddApply(studentNumber string, name string, day time.Time, period string, form string, area string, seat string) error {
+	err := db.Create(&Apply{
 		StudentNumber: studentNumber,
 		Name:          name,
 		Date:          day,
 		Period:        period,
 		Form:          form,
+		Area:          area,
 		Seat:          seat,
-	}
+	}).Error
 
-	err := db.Save(&apply).Error
-	if err.Error()[:9] != "Error 1062" {
-		err = errors.New("The seat has been applied")
+	if err != nil {
+		if err.Error()[:9] != "Error 1062" {
+			err = errors.New("The seat was applied")
+		}
 	}
 
 	return err
+}
+
+// GetApplys 신청내역 확인
+func GetApplys(day time.Time, period string, form string, area string) []Apply {
+	applys := []Apply{}
+	if form == "A" {
+		db.Table("applys").Where("date = ? AND period = ? AND form = ? AND area = ?", day.Format("2006-01-02"), period, form, area).Find(&applys)
+	} else {
+		db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Find(&applys)
+	}
+
+	return applys
 }
 
 // GetApplysByStudentNumber 페이지에 표시될 5일에 해당하는 신청내역을 가져옴
@@ -176,6 +190,20 @@ func GetApplysByStudentNumber(studentNumber string) []Apply {
 	applys := []Apply{}
 	db.Table("applys").Where("student_number = ? AND date >= ?", studentNumber, GetTimeTableDays()[0]).Find(&applys)
 	return applys
+}
+
+// GetApplyMount 특정 시간의 신청 수를 반환함
+func GetApplyMount(day time.Time, period string, form string) int {
+	var count int
+	db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Count(&count)
+	return count
+}
+
+// GetApplyMountOfArea 특정 시간, 구역의 신청 수를 반환함
+func GetApplyMountOfArea(day time.Time, period string, area string) int {
+	var count int
+	db.Table("applys").Where("date = ? AND period = ? AND form = A AND area = ?", day.Format("2006-01-02"), period, area).Count(&count)
+	return count
 }
 
 // DeleteApply 좌석 신청 정보 삭제
@@ -206,37 +234,16 @@ func DeleteApply(studentNumber string, day time.Time, period string) error {
 	return err
 }
 
+// AddHolyday 공휴일 추가
+func AddHolyday(day time.Time, name string) error {
+	return db.Create(&Holyday{Date: day, Name: name}).Error
+}
+
 // GetTimeTableHolydays 페이지에 표시될 5일에 해당하는 공휴일 정보를 가져옴
 func GetTimeTableHolydays() []Holyday {
 	holydays := []Holyday{}
 	db.Table("holydays").Where("date >= ? AND date <= ?", GetTimeTableDays()[0], GetTimeTableDays()[4].Format("2006-01-02")).Find(&holydays)
 	return holydays
-}
-
-// DeleteHolyday 공휴일을 삭제함
-func DeleteHolyday(holyday time.Time) error {
-	return db.Table("holydays").Where("date = ?", holyday).Delete(Holyday{}).Error
-}
-
-// GetApplyMount 특정 시간의 신청 수를 반환함
-func GetApplyMount(day time.Time, period string, form string) int {
-	var count int
-	db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Count(&count)
-	return count
-}
-
-// AddHolyday 공휴일 추가
-// error 반환
-func AddHolyday(day time.Time, name string) error {
-	return db.Save(&Holyday{Date: day, Name: name}).Error
-}
-
-// GetApplys 신청내역 확인
-func GetApplys(day time.Time, period string, form string) []Apply {
-	applys := []Apply{}
-	db.Table("applys").Where("date = ? AND period = ? AND form = ?", day.Format("2006-01-02"), period, form).Find(&applys)
-
-	return applys
 }
 
 // GetHolydays 모든 공휴일 정보 가져오기
@@ -245,4 +252,9 @@ func GetHolydays() []Holyday {
 	db.Table("holydays").Where("date >= ?", time.Now().Format("2006-01-02")).Find(&holydays)
 
 	return holydays
+}
+
+// DeleteHolyday 공휴일을 삭제함
+func DeleteHolyday(holyday time.Time) error {
+	return db.Table("holydays").Where("date = ?", holyday.Format("2006-01-02")).Delete(Holyday{}).Error
 }
