@@ -235,9 +235,9 @@ func MyPage(c echo.Context) error {
 	return c.Render(http.StatusOK, "myPage", nil)
 }
 
-// History : 신청내역 page
-func History(c echo.Context) error {
-	return c.Render(http.StatusOK, "history", nil)
+// ApplyHistory : 신청내역 page
+func ApplyHistory(c echo.Context) error {
+	return c.Render(http.StatusOK, "applyHistory", nil)
 }
 
 // Account : ChangePassword page

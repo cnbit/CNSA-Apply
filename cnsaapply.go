@@ -76,7 +76,7 @@ func main() {
 	// 내정보
 	e.GET("/user/", controller.MyPage, controller.AuthAPI)
 	// 내정보 - 신청내역
-	e.GET("/user/history", controller.History, controller.AuthAPI)
+	e.GET("/user/history", controller.ApplyHistory, controller.AuthAPI)
 	// 내정보 - 계정관리
 	e.GET("/user/account", controller.Account, controller.AuthAPI)
 	e.POST("/user/account", controller.AccountPOST, controller.AuthAPI)
