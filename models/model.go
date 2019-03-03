@@ -156,49 +156,54 @@ func GetTimeTableDays() [5]time.Time {
 // 발생 가능한 오류는 비슷한 시간대에 동일한 좌석에 신청
 func AddApply(studentNumber string, name string, gender int, day time.Time, period string, form string, area string, seat string) error {
 	var err error
-	if gender == 0 {
-		// 남자일 경우
-		if GetApplyMountByGender(day, period, gender) < 150 {
-			err = db.Create(&Apply{
-				StudentNumber: studentNumber,
-				Name:          name,
-				Gender:        gender,
-				Date:          day,
-				Period:        period,
-				Form:          form,
-				Area:          area,
-				Seat:          seat,
-			}).Error
-
-			if err != nil {
-				if err.Error()[:9] != "Error 1062" {
-					err = errors.New("The seat was applied")
-				}
-			}
-		} else {
-			err = errors.New("신청 가능 인원을 초과했습니다")
-		}
+	if form == "A" {
+		// 창학관 신청
+		err = db.Create(&Apply{
+			StudentNumber: studentNumber,
+			Name:          name,
+			Gender:        gender,
+			Date:          day,
+			Period:        period,
+			Form:          form,
+			Area:          area,
+			Seat:          seat,
+		}).Error
 	} else {
-		// 여자일 경우
-		if GetApplyMountByGender(day, period, gender) < 200 {
-			err = db.Create(&Apply{
-				StudentNumber: studentNumber,
-				Name:          name,
-				Gender:        gender,
-				Date:          day,
-				Period:        period,
-				Form:          form,
-				Area:          area,
-				Seat:          seat,
-			}).Error
-
-			if err != nil {
-				if err.Error()[:9] != "Error 1062" {
-					err = errors.New("The seat was applied")
-				}
+		// 자율관 신청
+		if gender == 0 {
+			// 남자일 경우
+			if GetApplyMountByGender(day, period, gender) < 150 {
+				err = db.Create(&Apply{
+					StudentNumber: studentNumber,
+					Name:          name,
+					Gender:        gender,
+					Date:          day,
+					Period:        period,
+					Form:          form,
+				}).Error
+			} else {
+				err = errors.New("신청 가능 인원을 초과했습니다")
 			}
 		} else {
-			err = errors.New("신청 가능 인원을 초과했습니다")
+			// 여자일 경우
+			if GetApplyMountByGender(day, period, gender) < 200 {
+				err = db.Create(&Apply{
+					StudentNumber: studentNumber,
+					Name:          name,
+					Gender:        gender,
+					Date:          day,
+					Period:        period,
+					Form:          form,
+				}).Error
+			} else {
+				err = errors.New("신청 가능 인원을 초과했습니다")
+			}
+		}
+	}
+
+	if err != nil {
+		if err.Error()[:9] != "Error 1062" {
+			err = errors.New("The seat was applied")
 		}
 	}
 
