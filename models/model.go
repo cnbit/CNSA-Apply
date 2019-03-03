@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -17,6 +18,10 @@ const (
 	SQLConnectionString = "*"
 	// SALT : SALT
 	SALT = "*"
+	// MANLIMIT : 남자 자율관 신청한도
+	MANLIMIT = 150
+	// WOMANLIMIT : 여자 자율관 신청한도
+	WOMANLIMIT = 200
 )
 
 // Database Connection
@@ -34,6 +39,7 @@ func init() {
 type Apply struct {
 	StudentNumber string    `gorm:"type:VARCHAR(6); primary_key" json:"studentNumber"`
 	Name          string    `gorm:"type:VARCHAR(50)" json:"name"`
+	Gender        int       `gorm:"type:INT" json:"gender"`
 	Date          time.Time `gorm:"type:DATE; primary_key; unique_index" json:"date"`
 	Period        string    `gorm:"type:VARCHAR(6); primary_key; unique_index" json:"period"`
 	Form          string    `gorm:"type:VARCHAR(1)" json:"form"`
@@ -153,20 +159,60 @@ func GetTimeTableDays() [5]time.Time {
 // AddApply 비어있는 좌석에 신청
 // 같은 사람이 같은 시간에 신청은 선택할 때 방지
 // 발생 가능한 오류는 비슷한 시간대에 동일한 좌석에 신청
-func AddApply(studentNumber string, name string, day time.Time, period string, form string, area string, seat string) error {
-	err := db.Create(&Apply{
-		StudentNumber: studentNumber,
-		Name:          name,
-		Date:          day,
-		Period:        period,
-		Form:          form,
-		Area:          area,
-		Seat:          seat,
-	}).Error
+func AddApply(studentNumber string, name string, gender int, day time.Time, period string, form string, area string, seat string) error {
+	var err error
+	if form == "A" {
+		// 창학관 신청
+		err = db.Create(&Apply{
+			StudentNumber: studentNumber,
+			Name:          name,
+			Gender:        gender,
+			Date:          day,
+			Period:        period,
+			Form:          form,
+			Area:          area,
+			Seat:          seat,
+		}).Error
+	} else {
+		// 자율관 신청
+		if gender == 0 {
+			// 남자일 경우
+			if GetApplyMountByGender(day, period, gender) < MANLIMIT {
+				err = db.Create(&Apply{
+					StudentNumber: studentNumber,
+					Name:          name,
+					Gender:        gender,
+					Date:          day,
+					Period:        period,
+					Form:          form,
+				}).Error
+			} else {
+				err = errors.New("신청 가능 인원을 초과했습니다")
+			}
+		} else {
+			// 여자일 경우
+			if GetApplyMountByGender(day, period, gender) < WOMANLIMIT {
+				err = db.Create(&Apply{
+					StudentNumber: studentNumber,
+					Name:          name,
+					Gender:        gender,
+					Date:          day,
+					Period:        period,
+					Form:          form,
+				}).Error
+			} else {
+				err = errors.New("신청 가능 인원을 초과했습니다")
+			}
+		}
+	}
 
 	if err != nil {
-		if err.Error()[:9] != "Error 1062" {
-			err = errors.New("The seat was applied")
+		if err.Error()[:10] == "Error 1062" {
+			if len(err.Error()) == 64 || len(err.Error()) == 62 {
+				err = errors.New("이미 신청된 좌석입니다")
+			} else if len(err.Error()) == 69 || len(err.Error()) == 67 {
+				err = errors.New("이미 신청된 시간입니다")
+			}
 		}
 	}
 
@@ -199,11 +245,60 @@ func GetApplyMount(day time.Time, period string, form string) int {
 	return count
 }
 
-// GetApplyMountOfArea 특정 시간, 구역의 신청 수를 반환함
-func GetApplyMountOfArea(day time.Time, period string, area string) int {
+// GetApplyMountByArea 특정 시간, 구역의 신청 수를 반환함
+func GetApplyMountByArea(day time.Time, period string, area string) int {
 	var count int
-	db.Table("applys").Where("date = ? AND period = ? AND form = A AND area = ?", day.Format("2006-01-02"), period, area).Count(&count)
+	db.Table("applys").Where("date = ? AND period = ? AND form = 'A' AND area = ?", day.Format("2006-01-02"), period, area).Count(&count)
 	return count
+}
+
+// GetApplyMountByGender 특정 시간, 구역의 신청 수를 반환함
+// 자율관 신청 시 인원 수 검사에 사용
+func GetApplyMountByGender(day time.Time, period string, gender int) int {
+	var count int
+	db.Table("applys").Where("date = ? AND period = ? AND form = 'B' AND gender = ?", day.Format("2006-01-02"), period, gender).Count(&count)
+	return count
+}
+
+// GetDatesByOverCount B구역 신청 제한을 넘은 시간대를 반환
+func GetDatesByOverCount(gender int) []string {
+	var times []string
+	days := GetTimeTableDays()
+
+	rows, err := db.Select("date, period, count(*)").Table("applys").Where("form = 'B' AND date >= ? AND date <= ? AND gender = ?", days[0], days[4].Format("2006-01-02"), gender).Group("date, period").Rows()
+	if err != nil {
+		// TODO: 에러처리
+	} else {
+		for rows.Next() {
+			var date time.Time
+			var period string
+			var count int
+			rows.Scan(&date, &period, &count)
+			dateString := date.Format("20060102")
+			if gender == 0 {
+				// 남자일 경우
+				if count >= MANLIMIT {
+					for i := 0; i < 5; i++ {
+						if days[i].Format("20060102") == dateString {
+							times = append(times, strconv.Itoa(i)+"-"+period)
+							break
+						}
+					}
+				}
+			} else {
+				// 여자일 경우
+				if count >= WOMANLIMIT {
+					for i := 0; i < 5; i++ {
+						if days[i].Format("20060102") == dateString {
+							times = append(times, strconv.Itoa(i)+"-"+period)
+							break
+						}
+					}
+				}
+			}
+		}
+	}
+	return times
 }
 
 // DeleteApply 좌석 신청 정보 삭제
