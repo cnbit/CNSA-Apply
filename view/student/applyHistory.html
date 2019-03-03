@@ -91,8 +91,11 @@
                     formData.append('date', this.applys[index].date.substring(0, 10));
                     formData.append('period', this.applys[index].period);
                     this.$http.post('/api/cancelApply', formData).then(function (response) {
-                        this.applys.splice(index, 1);
-                        console.log("취소완료");
+                        if (response.body == "success") {
+                            this.applys.splice(index, 1);
+                        } else {
+                            alert("이미 지난 시간대의 신청은 취소가 불가능합니다")
+                        }
                     }, function (error) {
                         console.log(error);
                     });
