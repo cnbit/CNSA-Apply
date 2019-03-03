@@ -21,7 +21,7 @@ const (
 	// MANLIMIT : 남자 자율관 신청한도
 	MANLIMIT = 150
 	// WOMANLIMIT : 여자 자율관 신청한도
-	WOMANLIMIT = 200
+	WOMANLIMIT = 150
 )
 
 // Database Connection
