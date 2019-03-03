@@ -144,6 +144,10 @@ func main() {
 	a.POST("/api/addHolyday", controller.AdminAddHolydayAPI)
 	// 공휴일 삭제
 	a.POST("/api/cancelHolyday", controller.AdminCancelHolydayAPI)
+	// 공휴일 모든 정보 가져오기
+	a.GET("/api/getAllHolydays", controller.AdminGetAllHolydaysAPI)
+	// 공휴일 일주일 치 정보 가져오기
+	a.GET("/api/getHolydays", controller.AdminGetHolydaysAPI)
 
 	// Start web server
 	e.Start(":80")
