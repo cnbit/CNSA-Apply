@@ -93,8 +93,8 @@ func main() {
 	e.GET("/api/getApplyMount", controller.GetApplyMountAPI, controller.AuthAPI)
 	// 구역 신청 인원 수 가져오기
 	e.GET("/api/getApplyMountByArea", controller.GetApplyMountByAreaAPI, controller.AuthAPI)
-	// 자율관 신청 인원 수 가져오기
-	e.GET("/api/getApplyMountByGender", controller.GetApplyMountByGenderAPI, controller.AuthAPI)
+	// 신청 한도가 넘은 자율관 신청 시간들을 가져오기
+	e.GET("/api/getDatesByOverCount", controller.GetDatesByOverCountAPI, controller.AuthAPI)
 	// 신청 취소하기
 	e.POST("/api/cancelApply", controller.CancelApplyAPI, controller.AuthAPI)
 

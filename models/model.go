@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -244,10 +245,52 @@ func GetApplyMountByArea(day time.Time, period string, area string) int {
 }
 
 // GetApplyMountByGender 특정 시간, 구역의 신청 수를 반환함
+// 자율관 신청 시 인원 수 검사에 사용
 func GetApplyMountByGender(day time.Time, period string, gender int) int {
 	var count int
 	db.Table("applys").Where("date = ? AND period = ? AND form = 'B' AND gender = ?", day.Format("2006-01-02"), period, gender).Count(&count)
 	return count
+}
+
+// GetDatesByOverCount B구역 신청 제한을 넘은 시간대를 반환
+func GetDatesByOverCount(gender int) []string {
+	var times []string
+	days := GetTimeTableDays()
+
+	rows, err := db.Select("date, period, count(*)").Table("applys").Where("form = 'B' AND date >= ? AND date <= ? AND gender = ?", days[0], days[4].Format("2006-01-02"), gender).Group("date, period").Rows()
+	if err != nil {
+		// TODO: 에러처리
+	} else {
+		for rows.Next() {
+			var date time.Time
+			var period string
+			var count int
+			rows.Scan(&date, &period, &count)
+			dateString := date.Format("20060102")
+			if gender == 0 {
+				// 남자일 경우
+				if count > 150 {
+					for i := 0; i < 5; i++ {
+						if days[i].Format("20060102") == dateString {
+							times = append(times, strconv.Itoa(i)+"-"+period)
+							break
+						}
+					}
+				}
+			} else {
+				// 여자일 경우
+				if count > 1 {
+					for i := 0; i < 5; i++ {
+						if days[i].Format("20060102") == dateString {
+							times = append(times, strconv.Itoa(i)+"-"+period)
+							break
+						}
+					}
+				}
+			}
+		}
+	}
+	return times
 }
 
 // DeleteApply 좌석 신청 정보 삭제

@@ -222,14 +222,11 @@ func GetApplyMountByAreaAPI(c echo.Context) error {
 	return c.String(http.StatusOK, strconv.Itoa(models.GetApplyMountByArea(day, c.QueryParam("period"), c.QueryParam("area"))))
 }
 
-// GetApplyMountByGenderAPI 구역 신청 인원 수 가져오기
-func GetApplyMountByGenderAPI(c echo.Context) error {
-	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
-	if err != nil {
-		return c.String(http.StatusOK, err.Error())
-	}
-	session := session.Default(c)
-	return c.String(http.StatusOK, strconv.Itoa(models.GetApplyMountByGender(day, c.QueryParam("period"), session.Get("gender").(int))))
+// GetDatesByOverCountAPI 신청 한도가 넘은 자율관 신청시간들을 가져오기
+func GetDatesByOverCountAPI(c echo.Context) error {
+	times := models.GetDatesByOverCount(session.Default(c).Get("gender").(int))
+
+	return c.JSON(http.StatusOK, times)
 }
 
 // CancelApplyAPI 신청 취소

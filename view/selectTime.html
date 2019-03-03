@@ -64,6 +64,12 @@
                 }
             });
         });
+        // 인원 초과시 클릭 안되게 설정
+        $.get("/api/getDatesByOverCount", function (times) {
+            times.forEach(function (time) {
+                $("#" + time).prop("disabled", true);
+            });
+        });
     </script>
 
     <script>
