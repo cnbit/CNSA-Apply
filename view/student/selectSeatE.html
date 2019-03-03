@@ -2,15 +2,132 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+    <!-- JQuery -->
+    <script src="/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
+
+    <!-- Custom scripts -->
+    <script src="/assets/js/script.js" type="text/javascript"></script>
 </head>
+
 <body>
     <h1>E구역 좌석 선택</h1>
+    <button id="1" type="button" class="seat" onclick="select(1)">1번</button>
+    <button id="2" type="button" class="seat" onclick="select(2)">2번</button>
+    <button id="3" type="button" class="seat right-end" onclick="select(3)">3번</button>
+
+    <button id="4" type="button" class="seat" onclick="select(4)">4번</button>
+    <button id="5" type="button" class="seat" onclick="select(5)">5번</button>
+    <button id="6" type="button" class="seat" onclick="select(6)">6번</button>
+    <button id="7" type="button" class="seat" onclick="select(7)">7번</button>
+    <button id="8" type="button" class="seat" onclick="select(8)">8번</button>
+    <br>
+
+    <button id="9" type="button" class="seat" onclick="select(9)">9번</button>
+    <button id="10" type="button" class="seat" onclick="select(10)">10번</button>
+    <button id="11" type="button" class="seat right-end" onclick="select(11)">11번</button>
     
+    <button id="12" type="button" class="seat" onclick="select(12)">12번</button>
+    <button id="13" type="button" class="seat" onclick="select(13)">13번</button>
+    <button id="14" type="button" class="seat" onclick="select(14)">14번</button>
+    <button id="15" type="button" class="seat" onclick="select(15)">15번</button>
+    <button id="16" type="button" class="seat" onclick="select(16)">16번</button>
+    <br>
+    <br>
+
+    <button id="17" type="button" class="seat" onclick="select(17)">17번</button>
+    <button id="18" type="button" class="seat" onclick="select(18)">18번</button>
+    <button id="19" type="button" class="seat right-end" onclick="select(19)">19번</button>
+
+    <button id="20" type="button" class="seat" onclick="select(20)">20번</button>
+    <button id="21" type="button" class="seat" onclick="select(21)">21번</button>
+    <button id="22" type="button" class="seat" onclick="select(22)">22번</button>
+    <button id="23" type="button" class="seat" onclick="select(23)">23번</button>
+    <button id="24" type="button" class="seat" onclick="select(24)">24번</button>
+    <br>
+
+    <button id="25" type="button" class="seat" onclick="select(25)">25번</button>
+    <button id="26" type="button" class="seat" onclick="select(26)">26번</button>
+    <button id="27" type="button" class="seat right-end" onclick="select(27)">27번</button>
+    
+    <button id="28" type="button" class="seat" onclick="select(28)">28번</button>
+    <button id="29" type="button" class="seat" onclick="select(29)">29번</button>
+    <button id="30" type="button" class="seat" onclick="select(30)">30번</button>
+    <button id="31" type="button" class="seat" onclick="select(31)">31번</button>
+    <button id="32" type="button" class="seat" onclick="select(32)">32번</button>
+    <br>
+    <br>
+    <br>
+    <br>
+    <button type="button" onclick="apply()">신청하기</button>
+
+    <!-- 페이지 로드 시 좌석정보 반영 -->
+    <script>
+        // 신청한 시간대 클릭 안되게 설정
+        $.get("/api/getApplysOfArea?date="+getParameterByName("date")+"&period="+getParameterByName("period")+"&form=A&area=E", function (applys) {
+            applys.forEach(function (apply) {
+                var days = GetTimeTableDays();
+                for(i = 0; i < 5; i++) {
+                    if(days[i].yyyymmdd() == apply.date.substring(0, 10)){
+                        $("#" + apply.seat).prop("disabled", true);
+                        break;
+                    }
+                }
+            });
+        });
+    </script>
+
+    <!-- 좌석 선택 및 신청 버튼 js code -->
+    <script>
+        var seatNum = 0;
+        function apply() {
+            // 창학관 신청
+            if (seatNum != 0) {
+                $.post("/api/apply", {
+                    date: getParameterByName("date"),
+                    period: getParameterByName("period"),
+                    form: "A",
+                    area: "E",
+                    seat: seatNum
+                }, function (data) {
+                    sessionStorage.removeItem('time');
+
+                    if (sessionStorage.times == null) {
+                        location.href = "/apply/applySuccess"
+                    } else {
+                        location.href = "/apply/selectArea"
+                    }
+                    /*
+                    if (data == "success") {
+                        sessionStorage.removeItem('time');
+    
+                        if (sessionStorage.times == null) {
+                            location.href = "/apply/applySuccess"
+                        } else {
+                            location.href = "/apply/selectArea"
+                        }
+                    } else {
+                        // TODO: 에러 메세지 세분화
+                    }*/
+                });
+            } else {
+                alert("좌석을 선택해주세요");
+            }
+        }
+
+        function select(seat) {
+            seatNum = seat;
+        }
+    </script>
+
     [[if (eq .gender 1)]]
     <script>
         history.back();
     </script>
     [[end]]
 </body>
+
 </html>
 [[end]]
