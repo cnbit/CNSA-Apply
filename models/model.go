@@ -207,7 +207,7 @@ func AddApply(studentNumber string, name string, gender int, day time.Time, peri
 	}
 
 	if err != nil {
-		if err.Error()[:9] != "Error 1062" {
+		if err.Error()[:10] == "Error 1062" {
 			err = errors.New("The seat was applied")
 		}
 	}
