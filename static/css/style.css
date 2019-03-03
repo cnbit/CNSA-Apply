@@ -80,3 +80,16 @@ body {
     .seat.left-end {
         margin-left: 50px; 
     }
+
+/* 창학관 구역선택 */
+.area {
+    width: 80px;
+    height: 80px;
+}
+
+    .area:focus {
+        background-color: black;
+        color: white;
+        border: 0;
+    }
+    

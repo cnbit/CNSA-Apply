@@ -7,7 +7,7 @@
     <title>CNSA APPLY</title>
     <!-- Icon -->
     <link rel="shortcut icon" href="/assets/img/cnsalogo.png">
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
 
@@ -39,7 +39,7 @@
     </div>
     <br>
 
-    <h1>B구역 좌석 선택</h1>
+    <h1><span id="period"></span> B구역 좌석 선택</h1>
     <button id="1" type="button" class="seat" onclick="select(1)">1번</button>
     <button id="2" type="button" class="seat" onclick="select(2)">2번</button>
     <button id="3" type="button" class="seat" onclick="select(3)">3번</button>
@@ -124,14 +124,16 @@
     <br>
     <br>
     <br>
-    <button type="button" onclick="apply()">신청하기</button>
+    <button type="button" onclick="back()" style="width: 80px; height: 40px;">뒤로가기</button>
+    <button type="button" onclick="apply()" style="width: 80px; height: 40px;">신청하기</button>
 
     <!-- 페이지 로드 시 좌석정보 반영 -->
     <script>
         // 신청한 시간대 클릭 안되게 설정
+        var days = GetTimeTableDays();
+        var i = 0;
         $.get("/api/getApplysByArea?date=" + getParameterByName("date") + "&period=" + getParameterByName("period") + "&form=A&area=B", function (applys) {
             applys.forEach(function (apply) {
-                var days = GetTimeTableDays();
                 for (i = 0; i < 5; i++) {
                     if (days[i].yyyymmdd() == apply.date.substring(0, 10)) {
                         $("#" + apply.seat).prop("disabled", true);
@@ -140,6 +142,21 @@
                 }
             });
         });
+
+        // 현재 신청중인 시간 표시
+        var day;
+        if (i == 0) {
+            day = "월요일";
+        } else if (i == 1) {
+            day = "화요일";
+        } else if (i == 2) {
+            day = "수요일";
+        } else if (i == 3) {
+            day = "목요일";
+        } else {
+            day = "금요일";
+        }
+        document.getElementById('period').innerText = day + " - " + (getParameterByName("period") == "7" ? "7교시" : getParameterByName("period"));
     </script>
 
     <!-- 좌석 선택 및 신청 버튼 js code -->
@@ -182,6 +199,11 @@
 
         function select(seat) {
             seatNum = seat;
+        }
+
+        // 뒤로가기 버튼
+        function back() {
+            history.back();
         }
     </script>
 
