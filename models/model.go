@@ -208,7 +208,11 @@ func AddApply(studentNumber string, name string, gender int, day time.Time, peri
 
 	if err != nil {
 		if err.Error()[:10] == "Error 1062" {
-			err = errors.New("The seat was applied")
+			if err.Error()[len(err.Error())-5:len(err.Error())-1] == "seat" {
+				err = errors.New("이미 신청된 좌석입니다")
+			} else {
+				err = errors.New("이미 신청된 시간입니다")
+			}
 		}
 	}
 
