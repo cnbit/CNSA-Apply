@@ -181,7 +181,7 @@ func ApplyAPI(c echo.Context) error {
 		return c.String(http.StatusOK, err.Error())
 	}
 
-	err = models.AddApply(session.Get("studentNumber").(string), session.Get("name").(string), day, c.FormValue("period"), c.FormValue("form"), c.FormValue("area"), c.FormValue("seat"))
+	err = models.AddApply(session.Get("studentNumber").(string), session.Get("name").(string), session.Get("gender").(int), day, c.FormValue("period"), c.FormValue("form"), c.FormValue("area"), c.FormValue("seat"))
 	if err != nil {
 		return c.String(http.StatusOK, err.Error())
 	}
@@ -194,8 +194,8 @@ func GetApplysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetApplysByStudentNumber(session.Default(c).Get("studentNumber").(string)))
 }
 
-// GetApplysOfAreaAPI 구역 신청내역 가져오기
-func GetApplysOfAreaAPI(c echo.Context) error {
+// GetApplysByAreaAPI 구역 신청내역 가져오기
+func GetApplysByAreaAPI(c echo.Context) error {
 	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
 	if err != nil {
 		// TODO: http code 추후 정리
@@ -204,13 +204,29 @@ func GetApplysOfAreaAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetApplys(day, c.QueryParam("period"), c.QueryParam("form"), c.QueryParam("area")))
 }
 
-// GetApplyMountOfAreaAPI 구역 신청 인원 수 가져오기
-func GetApplyMountOfAreaAPI(c echo.Context) error {
+// GetApplyMountAPI : 시간대에 해당하는 인원 수 가져오기
+func GetApplyMountAPI(c echo.Context) error {
 	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
 	if err != nil {
 		return c.String(http.StatusOK, err.Error())
 	}
-	return c.String(http.StatusOK, strconv.Itoa(models.GetApplyMountOfArea(day, c.QueryParam("period"), c.QueryParam("area"))))
+	return c.String(http.StatusOK, strconv.Itoa(models.GetApplyMount(day, c.QueryParam("period"), c.QueryParam("form"))))
+}
+
+// GetApplyMountByAreaAPI 구역 신청 인원 수 가져오기
+func GetApplyMountByAreaAPI(c echo.Context) error {
+	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
+	if err != nil {
+		return c.String(http.StatusOK, err.Error())
+	}
+	return c.String(http.StatusOK, strconv.Itoa(models.GetApplyMountByArea(day, c.QueryParam("period"), c.QueryParam("area"))))
+}
+
+// GetDatesByOverCountAPI 신청 한도가 넘은 자율관 신청시간들을 가져오기
+func GetDatesByOverCountAPI(c echo.Context) error {
+	times := models.GetDatesByOverCount(session.Default(c).Get("gender").(int))
+
+	return c.JSON(http.StatusOK, times)
 }
 
 // CancelApplyAPI 신청 취소
@@ -265,13 +281,4 @@ func ChangeSuccess(c echo.Context) error {
 // GetHolydaysAPI : 공휴일 정보 가져오기 API
 func GetHolydaysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetTimeTableHolydays())
-}
-
-// GetApplyMountAPI : 시간대에 해당하는 인원 수 가져오기
-func GetApplyMountAPI(c echo.Context) error {
-	day, err := time.Parse("2006-01-02", c.QueryParam("date"))
-	if err != nil {
-		return c.String(http.StatusOK, err.Error())
-	}
-	return c.String(http.StatusOK, strconv.Itoa(models.GetApplyMount(day, c.QueryParam("period"), c.QueryParam("form"))))
 }

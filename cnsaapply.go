@@ -88,13 +88,15 @@ func main() {
 	// 자신의 신청내역 가져오기
 	e.GET("/api/getApplys", controller.GetApplysAPI, controller.AuthAPI)
 	// 구역 신청내역 가져오기
-	e.GET("/api/getApplysOfArea", controller.GetApplysOfAreaAPI, controller.AuthAPI)
-	// 구역 신청 인원 수 가져오기
-	e.GET("/api/getApplyMountOfArea", controller.GetApplyMountOfAreaAPI, controller.AuthAPI)
-	// 신청 취소하기
-	e.POST("/api/cancelApply", controller.CancelApplyAPI, controller.AuthAPI)
+	e.GET("/api/getApplysByArea", controller.GetApplysByAreaAPI, controller.AuthAPI)
 	// 시간대에 해당하는 인원 수 가져오기
 	e.GET("/api/getApplyMount", controller.GetApplyMountAPI, controller.AuthAPI)
+	// 구역 신청 인원 수 가져오기
+	e.GET("/api/getApplyMountByArea", controller.GetApplyMountByAreaAPI, controller.AuthAPI)
+	// 신청 한도가 넘은 자율관 신청 시간들을 가져오기
+	e.GET("/api/getDatesByOverCount", controller.GetDatesByOverCountAPI, controller.AuthAPI)
+	// 신청 취소하기
+	e.POST("/api/cancelApply", controller.CancelApplyAPI, controller.AuthAPI)
 
 	// 공휴일 정보 가져오기
 	e.GET("/api/getHolydays", controller.GetHolydaysAPI, controller.AuthAPI)

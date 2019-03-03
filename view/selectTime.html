@@ -56,12 +56,18 @@
         $.get("/api/getApplys", function (applys) {
             applys.forEach(function (apply) {
                 var days = GetTimeTableDays();
-                for(i = 0; i < 5; i++) {
-                    if(days[i].yyyymmdd() == apply.date.substring(0, 10)){
+                for (i = 0; i < 5; i++) {
+                    if (days[i].yyyymmdd() == apply.date.substring(0, 10)) {
                         $("#" + i + "-" + apply.period).prop("disabled", true);
                         break;
                     }
                 }
+            });
+        });
+        // 인원 초과시 클릭 안되게 설정
+        $.get("/api/getDatesByOverCount", function (times) {
+            times.forEach(function (time) {
+                $("#" + time).prop("disabled", true);
             });
         });
     </script>
