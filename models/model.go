@@ -18,6 +18,10 @@ const (
 	SQLConnectionString = "*"
 	// SALT : SALT
 	SALT = "*"
+	// MANLIMIT : 남자 자율관 신청한도
+	MANLIMIT = 150
+	// WOMANLIMIT : 여자 자율관 신청한도
+	WOMANLIMIT = 200
 )
 
 // Database Connection
@@ -173,7 +177,7 @@ func AddApply(studentNumber string, name string, gender int, day time.Time, peri
 		// 자율관 신청
 		if gender == 0 {
 			// 남자일 경우
-			if GetApplyMountByGender(day, period, gender) < 150 {
+			if GetApplyMountByGender(day, period, gender) < MANLIMIT {
 				err = db.Create(&Apply{
 					StudentNumber: studentNumber,
 					Name:          name,
@@ -187,7 +191,7 @@ func AddApply(studentNumber string, name string, gender int, day time.Time, peri
 			}
 		} else {
 			// 여자일 경우
-			if GetApplyMountByGender(day, period, gender) < 200 {
+			if GetApplyMountByGender(day, period, gender) < WOMANLIMIT {
 				err = db.Create(&Apply{
 					StudentNumber: studentNumber,
 					Name:          name,
@@ -269,7 +273,7 @@ func GetDatesByOverCount(gender int) []string {
 			dateString := date.Format("20060102")
 			if gender == 0 {
 				// 남자일 경우
-				if count > 150 {
+				if count >= MANLIMIT {
 					for i := 0; i < 5; i++ {
 						if days[i].Format("20060102") == dateString {
 							times = append(times, strconv.Itoa(i)+"-"+period)
@@ -279,7 +283,7 @@ func GetDatesByOverCount(gender int) []string {
 				}
 			} else {
 				// 여자일 경우
-				if count > 1 {
+				if count >= WOMANLIMIT {
 					for i := 0; i < 5; i++ {
 						if days[i].Format("20060102") == dateString {
 							times = append(times, strconv.Itoa(i)+"-"+period)
