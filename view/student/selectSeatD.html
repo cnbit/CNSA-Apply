@@ -89,7 +89,7 @@
     <!-- 페이지 로드 시 좌석정보 반영 -->
     <script>
         // 신청한 시간대 클릭 안되게 설정
-        $.get("/api/getApplysOfArea?date=" + getParameterByName("date") + "&period=" + getParameterByName("period") + "&form=A&area=D", function (applys) {
+        $.get("/api/getApplysByArea?date=" + getParameterByName("date") + "&period=" + getParameterByName("period") + "&form=A&area=D", function (applys) {
             applys.forEach(function (apply) {
                 var days = GetTimeTableDays();
                 for (i = 0; i < 5; i++) {
