@@ -1,7 +1,128 @@
-body {
-    margin: 0;
+html, body {
+	margin: 0;
+	padding: 0;
 }
 
+.full-html, .full-html > body {
+	width: 100%;
+	height: 100%;
+}
+
+a {
+    color: black !important;
+}
+
+    a:hover {
+        text-decoration: none !important;
+    }
+
+
+/* 메인페이지 */
+.index-background {
+    background-image: url("/assets/img/background-horizontal.png");
+    background-size: cover;
+    width: 100%;
+}
+
+.navbar-main {
+    width: 100%;
+    height: 120px;
+    line-height: 120px;
+    font-size: 30px;
+}
+
+    .navbar-main > a {
+        float: right;
+        margin-right: 65px;
+    }
+
+.index-middle-block {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+}
+
+.main-cnsa {
+    font-size: 40px;
+    margin-top: 120px;
+    margin-bottom: 25px;
+}
+
+.main-form-apply {
+    font-size: 80px;
+    margin-bottom: 320px;
+}
+
+.apply-button {
+    color: black;
+    background-color: white;
+    padding: 35px 120px 35px 120px;
+    border-radius: 30px;
+    font-size: 50px;
+    margin-bottom: 90px;
+}
+
+    .apply-button:hover {
+        color: black;
+    }
+
+.apply-history {
+    font-size: 40px;
+}
+
+@media (min-width: 1319.98px) {
+    .index-background {
+        background-image: url("/assets/img/background-vertical.png");
+    }
+
+    .navbar-main {
+        height: 90px;
+        line-height: 90px;
+        font-size: 20px;
+    }
+    
+        .navbar-main > a {
+            float: right;
+            margin-right: 65px;
+        }
+
+            .navbar-main > a > img {
+                width: 30px;
+            }
+
+    .main-logo {
+        width: 220px;
+    }
+
+    .main-cnsa {
+        font-size: 25px;
+        margin-top: 50px;
+        margin-bottom: 35px;
+    }
+    
+    .main-form-apply {
+        font-size: 50px;
+        margin-bottom: 110px;
+    }
+
+    .apply-button {
+        color: black;
+        background-color: white;
+        padding: 20px 80px 20px 80px;
+        border-radius: 20px;
+        font-size: 30px;
+    }
+
+        .apply-button:hover {
+            color: black;
+        }
+        
+    .apply-history {
+        font-size: 15px;
+    }
+}
 /* NAVBAR */
 .navbar {
     height: 80px;
