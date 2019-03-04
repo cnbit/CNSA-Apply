@@ -36,6 +36,11 @@ a {
         margin-right: 65px;
     }
 
+    .navbar-main > a > img {
+        width: 40px;
+        margin-top: -10px;
+    }
+
 .index-middle-block {
     position: absolute;
     top: 50%;
@@ -90,6 +95,7 @@ a {
 
             .navbar-main > a > img {
                 width: 30px;
+                margin-top: -5px;
             }
 
     .main-logo {
