@@ -3,46 +3,74 @@
 <html>
 
 <head>
+    <!-- Title -->
+    <title>CNSA APPLY</title>
+    <!-- Icon -->
+    <link rel="shortcut icon" href="/assets/img/cnsalogo.png">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
     <!-- JQuery -->
     <script src="/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
-
     <!-- Custom scripts -->
     <script src="/assets/js/script.js" type="text/javascript"></script>
 </head>
 
 <body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="nav-logo">
+            <img src="/assets/img/cnsalogo.png" width="70" />
+        </div>
+        <div class="nav-brand">
+            <a href="/">면학실 장소신청</a>
+        </div>
+
+        <div class="nav-item" style="margin-top: 5px;">
+            <a href="/logout"><img src="/assets/img/logout.png" width="30" /></a>
+        </div>
+        <div class="nav-item">
+            <a href="/user/">내 정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="/">홈</a>
+        </div>
+    </div>
+    <br>
+
     <h1>시간대 선택</h1>
     <form method="POST">
         <h3>월요일</h3>
-        <label><input id="0-7" type="checkbox" name="times" value="mon-7">7교시</label>
+        <label><input id="0-7" type="checkbox" name="times" value="mon-7">1~7교시</label>
         <label><input id="0-CAS" type="checkbox" name="times" value="mon-CAS">CAS</label>
         <label><input id="0-EP1" type="checkbox" name="times" value="mon-EP1">EP1</label>
         <label><input id="0-EP2" type="checkbox" name="times" value="mon-EP2">EP2</label>
         <br />
 
         <h3>화요일</h3>
-        <label><input id="1-7" type="checkbox" name="times" value="tue-7">7교시</label>
+        <label><input id="1-7" type="checkbox" name="times" value="tue-7">1~7교시</label>
         <label><input id="1-CAS" type="checkbox" name="times" value="tue-CAS">CAS</label>
         <label><input id="1-EP1" type="checkbox" name="times" value="tue-EP1">EP1</label>
         <label><input id="1-EP2" type="checkbox" name="times" value="tue-EP2">EP2</label>
         <br />
 
         <h3>수요일</h3>
-        <label><input id="2-7" type="checkbox" name="times" value="wed-7">7교시</label>
+        <label><input id="2-7" type="checkbox" name="times" value="wed-7">1~7교시</label>
         <label><input id="2-CAS" type="checkbox" name="times" value="wed-CAS">CAS</label>
         <label><input id="2-EP1" type="checkbox" name="times" value="wed-EP1">EP1</label>
         <label><input id="2-EP2" type="checkbox" name="times" value="wed-EP2">EP2</label>
         <br />
 
         <h3>목요일</h3>
-        <label><input id="3-7" type="checkbox" name="times" value="thr-7">7교시</label>
+        <label><input id="3-7" type="checkbox" name="times" value="thr-7">1~7교시</label>
         <label><input id="3-CAS" type="checkbox" name="times" value="thr-CAS">CAS</label>
         <label><input id="3-EP1" type="checkbox" name="times" value="thr-EP1">EP1</label>
         <label><input id="3-EP2" type="checkbox" name="times" value="thr-EP2">EP2</label>
         <br />
 
         <h3>금요일</h3>
-        <label><input id="4-7" type="checkbox" name="times" value="fri-7">7교시</label>
+        <label><input id="4-7" type="checkbox" name="times" value="fri-7">1~7교시</label>
         <label><input id="4-CAS" type="checkbox" name="times" value="fri-CAS">CAS</label>
         <label><input id="4-EP1" type="checkbox" name="times" value="fri-EP1">EP1</label>
         <label><input id="4-EP2" type="checkbox" name="times" value="fri-EP2">EP2</label>

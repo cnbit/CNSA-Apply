@@ -1,29 +1,65 @@
+body {
+    margin: 0;
+}
+
+/* NAVBAR */
+.navbar {
+    height: 80px;
+    line-height: 80px;
+    width: 100%;
+    background-color: white;
+    border: solid 1px gray; 
+}
+
+        .navbar > div > a {
+            color: black;
+            text-decoration: none;
+        }
+
+.nav-logo { 
+    float: left; 
+    margin-top: 5px; 
+    margin-left: 10px;
+}
+
+.nav-brand {
+    float: left;
+    font-size: 17pt;
+    font-weight: bold;
+}
+
+.nav-item {
+    float: right;
+    margin-right: 40px;
+}
+
+
 /* 장소신청 내역 */
 .apply-list-item {
     margin: 5px;
     text-align: center;
 }
-.apply-list-item > div {
-    float: left;
-}
-.apply-list-item > div:nth-child(1) {
-    width: 100px;
-}
-.apply-list-item > div:nth-child(2) {
-    width: 50px;
-}
-.apply-list-item > div:nth-child(3) {
-    width: 60px;
-}
-.apply-list-item > div:nth-child(4) {
-    width: 50px;
-}
-.apply-list-item > div:nth-child(5) {
-    width: 50px;
-}
-.apply-list-item > div:nth-child(6) {
-    width: 40px;
-}
+    .apply-list-item > div {
+        float: left;
+    }
+    .apply-list-item > div:nth-child(1) {
+        width: 100px;
+    }
+    .apply-list-item > div:nth-child(2) {
+        width: 50px;
+    }
+    .apply-list-item > div:nth-child(3) {
+        width: 60px;
+    }
+    .apply-list-item > div:nth-child(4) {
+        width: 50px;
+    }
+    .apply-list-item > div:nth-child(5) {
+        width: 50px;
+    }
+    .apply-list-item > div:nth-child(6) {
+        width: 40px;
+    }
 
 /* 창학관 좌석선택 */
 .seat {
@@ -31,10 +67,29 @@
     height: 50px;
 }
 
-.seat.right-end {
-    margin-right: 50px; 
+    .seat:focus {
+        background-color: black;
+        color: white;
+        border: 0;
+    }
+
+    .seat.right-end {
+        margin-right: 50px; 
+    }
+
+    .seat.left-end {
+        margin-left: 50px; 
+    }
+
+/* 창학관 구역선택 */
+.area {
+    width: 80px;
+    height: 80px;
 }
 
-.seat.left-end {
-    margin-left: 50px; 
-}
+    .area:focus {
+        background-color: black;
+        color: white;
+        border: 0;
+    }
+    

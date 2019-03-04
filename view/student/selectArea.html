@@ -3,43 +3,69 @@
 <html>
 
 <head>
+    <!-- Title -->
+    <title>CNSA APPLY</title>
+    <!-- Icon -->
+    <link rel="shortcut icon" href="/assets/img/cnsalogo.png">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
     <!-- JQuery -->
     <script src="/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
-
     <!-- Custom scripts -->
     <script src="/assets/js/script.js" type="text/javascript"></script>
 </head>
 
 <body>
-    <h1>구역 선택</h1>
-    <form method="POST">
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="nav-logo">
+            <img src="/assets/img/cnsalogo.png" width="70" />
+        </div>
+        <div class="nav-brand">
+            <a href="/">면학실 장소신청</a>
+        </div>
+
+        <div class="nav-item" style="margin-top: 5px;">
+            <a href="/logout"><img src="/assets/img/logout.png" width="30" /></a>
+        </div>
+        <div class="nav-item">
+            <a href="/user/">내 정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="/">홈</a>
+        </div>
+    </div>
+    <br>
+
+    <h1><span id="period"></span> 구역 선택</h1>
+    <form id="form" method="POST" style="float: left;">
         <input type="hidden" id="time" name="time">
         <input type="hidden" id="area" name="area">
-        <button type="button" onclick="selectArea('A')" [[if (eq .gender 0)]]disabled[[end]]>A 구역</button>
+        <button class="area" type="button" onclick="selectArea('A')" [[if (eq .gender 0)]]disabled[[end]]>A 구역</button>
         <br />
         <br />
-        <button type="button" onclick="selectArea('B')" [[if (eq .gender 0)]]disabled[[end]]>B 구역</button>
+        <button class="area" type="button" onclick="selectArea('B')" [[if (eq .gender 0)]]disabled[[end]]>B 구역</button>
         <br />
         <br />
-        <button type="button" onclick="selectArea('C')" [[if (eq .gender 0)]]disabled[[end]]>C 구역</button>
+        <button class="area" type="button" onclick="selectArea('C')" [[if (eq .gender 0)]]disabled[[end]]>C 구역</button>
         <br />
         <br />
-        <button type="button" onclick="selectArea('D')" [[if (eq .gender 0)]]disabled[[end]]>D 구역</button>
+        <button class="area" type="button" onclick="selectArea('D')" [[if (eq .gender 0)]]disabled[[end]]>D 구역</button>
         <br />
         <br />
-        <button type="button" onclick="selectArea('E')" [[if (eq .gender 1)]]disabled[[end]]>E 구역</button>
+        <button class="area" type="button" onclick="selectArea('E')" [[if (eq .gender 1)]]disabled[[end]]>E 구역</button>
         <br />
         <br />
-        <button type="button" onclick="selectArea('F')" [[if (eq .gender 1)]]disabled[[end]]>F 구역</button>
+        <button class="area" type="button" onclick="selectArea('F')" [[if (eq .gender 1)]]disabled[[end]]>F 구역</button>
         <br />
         <br />
-        <button type="button" onclick="selectArea('G')" [[if (eq .gender 1)]]disabled[[end]]>G 구역</button>
+        <button class="area" type="button" onclick="selectArea('G')" [[if (eq .gender 1)]]disabled[[end]]>G 구역</button>
         <br />
-        <br />
-        <br />
-        <button type="submit">선택</button>
     </form>
-    
+    <img src="/assets/img/areas.png" style="float: left; margin-left: 200px;" width="600">
+
     <script>
         // 신청할 시간대 정보 정리
         if (sessionStorage.time == null) {
@@ -56,9 +82,25 @@
         }
         document.getElementById('time').value = sessionStorage.time;
 
+        // 현재 신청중인 시간 표시
+        dayAndPeriod = split(sessionStorage.time, "-", 1);
+        if (dayAndPeriod[0] == "mon") {
+            dayAndPeriod[0] = "월요일"
+        } else if (dayAndPeriod[0] == "tue") {
+            dayAndPeriod[0] = "화요일"
+        } else if (dayAndPeriod[0] == "wed") {
+            dayAndPeriod[0] = "수요일"
+        } else if (dayAndPeriod[0] == "thr") {
+            dayAndPeriod[0] = "목요일"
+        } else if (dayAndPeriod[0] == "fri") {
+            dayAndPeriod[0] = "금요일"
+        }
+        document.getElementById('period').innerText = dayAndPeriod[0] + " - " + (dayAndPeriod[1] == "7" ? "7교시" : dayAndPeriod[1]);
+
         // 구역 선택
         function selectArea(area) {
             document.getElementById('area').value = area;
+            document.getElementById("form").submit();
         }
     </script>
 </body>
