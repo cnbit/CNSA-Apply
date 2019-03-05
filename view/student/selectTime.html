@@ -7,7 +7,7 @@
     <title>CNSA APPLY</title>
     <!-- Icon -->
     <link rel="shortcut icon" href="/assets/img/cnsalogo.png">
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
 
@@ -92,12 +92,15 @@
                 }
             });
         });
-        // 인원 초과시 클릭 안되게 설정
-        $.get("/api/getDatesByOverCount", function (times) {
-            times.forEach(function (time) {
-                $("#" + time).prop("disabled", true);
+
+        if (getParameterByName("form") == "B") {
+            // 인원 초과시 클릭 안되게 설정
+            $.get("/api/getDatesByOverCount", function (times) {
+                times.forEach(function (time) {
+                    $("#" + time).prop("disabled", true);
+                });
             });
-        });
+        }
     </script>
 
     <script>
