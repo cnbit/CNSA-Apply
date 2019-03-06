@@ -1,0 +1,203 @@
+[[define "BviewE"]]
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Title -->
+    <title>CNSA APPLY</title>
+    <!-- Icon -->
+    <link rel="shortcut icon" href="/assets/img/cnsalogo.png">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+    <!-- JQuery -->
+    <script src="/assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <!-- Custom scripts -->
+    <script src="/assets/js/script.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="nav-logo">
+            <img src="/assets/img/cnsalogo.png" width="70" />
+        </div>
+        <div class="nav-brand">
+            <a href="/">면학실 장소신청</a>
+        </div>
+
+        <div class="nav-item" style="margin-top: 5px;">
+            <a href="/logout"><img src="/assets/img/logout.png" width="30" /></a>
+        </div>
+        <div class="nav-item">
+            <a href="/user/">내 정보</a>
+        </div>
+        <div class="nav-item">
+            <a href="/">홈</a>
+        </div>
+    </div>
+    <br>
+
+    <h1><span id="period"></span> E구역 좌석 선택</h1>
+    <button id="1" type="button" class="seat" onclick="select(1)">1번</button>
+    <button id="2" type="button" class="seat" onclick="select(2)">2번</button>
+    <button id="3" type="button" class="seat" onclick="select(3)">3번</button>
+    <button id="4" type="button" class="seat" onclick="select(4)">4번</button>
+    <button id="5" type="button" class="seat right-end" onclick="select(5)">5번</button>
+
+    <button id="6" type="button" class="seat" onclick="select(6)">6번</button>
+    <button id="7" type="button" class="seat" onclick="select(7)">7번</button>
+    <button id="8" type="button" class="seat" onclick="select(8)">8번</button>
+    <button id="9" type="button" class="seat" onclick="select(9)">9번</button>
+    <button id="10" type="button" class="seat" onclick="select(10)">10번</button>
+    <br>
+
+    <button id="11" type="button" class="seat" onclick="select(11)">11번</button>
+    <button id="12" type="button" class="seat" onclick="select(12)">12번</button>
+    <button id="13" type="button" class="seat" onclick="select(13)">13번</button>
+    <button id="14" type="button" class="seat" onclick="select(14)">14번</button>
+    <button id="15" type="button" class="seat right-end" onclick="select(15)">15번</button>
+
+    <button id="16" type="button" class="seat" onclick="select(16)">16번</button>
+    <button id="17" type="button" class="seat" onclick="select(17)">17번</button>
+    <button id="18" type="button" class="seat" onclick="select(18)">18번</button>
+    <button id="19" type="button" class="seat" onclick="select(19)">19번</button>
+    <button id="20" type="button" class="seat right-end" onclick="select(20)">20번</button>
+    <br>
+    <br>
+
+    <button id="21" type="button" class="seat" onclick="select(21)">21번</button>
+    <button id="22" type="button" class="seat" onclick="select(22)">22번</button>
+    <button id="23" type="button" class="seat" onclick="select(23)">23번</button>
+    <button id="24" type="button" class="seat" onclick="select(24)">24번</button>
+    <button id="25" type="button" class="seat right-end" onclick="select(25)">25번</button>
+
+    <button id="26" type="button" class="seat" onclick="select(26)">26번</button>
+    <button id="27" type="button" class="seat" onclick="select(27)">27번</button>
+    <button id="28" type="button" class="seat" onclick="select(28)">28번</button>
+    <button id="29" type="button" class="seat" onclick="select(29)">29번</button>
+    <button id="30" type="button" class="seat" onclick="select(30)">30번</button>
+    <br>
+
+    <button id="31" type="button" class="seat" onclick="select(31)">31번</button>
+    <button id="32" type="button" class="seat" onclick="select(32)">32번</button>
+    <button id="33" type="button" class="seat" onclick="select(33)">33번</button> 
+    <button id="34" type="button" class="seat" onclick="select(34)">34번</button>
+    <button id="35" type="button" class="seat right-end" onclick="select(35)">35번</button>
+    
+    <button id="36" type="button" class="seat" onclick="select(26)">36번</button>
+    <button id="37" type="button" class="seat" onclick="select(27)">37번</button>
+    <button id="38" type="button" class="seat" onclick="select(28)">38번</button>
+    <button id="39" type="button" class="seat" onclick="select(29)">39번</button>
+    <button id="40" type="button" class="seat" onclick="select(30)">40번</button>
+    <br>
+    <br>
+
+    <button id="41" type="button" class="seat" onclick="select(31)">41번</button>
+    <button id="42" type="button" class="seat" onclick="select(32)">42번</button>
+    <button id="43" type="button" class="seat" onclick="select(33)">43번</button>
+    
+    <button id="44" type="button" class="seat" onclick="select(34)">44번</button>
+    <button id="45" type="button" class="seat" onclick="select(26)">45번</button>
+    <br>
+    <br>
+    <br>
+    <br>
+    <button type="button" onclick="back()" style="width: 80px; height: 40px;">뒤로가기</button>
+    <button type="button" onclick="apply()" style="width: 80px; height: 40px;">신청하기</button>
+
+    <!-- 페이지 로드 시 좌석정보 반영 -->
+    <script>
+        // 신청한 시간대 클릭 안되게 설정
+        var days = GetTimeTableDays();
+        $.get("/api/getApplysByArea?date=" + getParameterByName("date") + "&period=" + getParameterByName("period") + "&form=B&area=E", function (applys) {
+            applys.forEach(function (apply) {
+                for (i = 0; i < 5; i++) {
+                    if (days[i].yyyymmdd() == apply.date.substring(0, 10)) {
+                        $("#" + apply.seat).prop("disabled", true);
+                        break;
+                    }
+                }
+            });
+        });
+
+        // 현재 신청중인 시간 표시
+        var i = 0;
+        for (; i < 5; i++) {
+            if (days[i].yyyymmdd() == getParameterByName("date")) {
+                break;
+            }
+        }
+        var day;
+        if (i == 0) {
+            day = "월요일";
+        } else if (i == 1) {
+            day = "화요일";
+        } else if (i == 2) {
+            day = "수요일";
+        } else if (i == 3) {
+            day = "목요일";
+        } else {
+            day = "금요일";
+        }
+        document.getElementById('period').innerText = day + " - " + (getParameterByName("period") == "7" ? "7교시" : getParameterByName("period"));
+    </script>
+
+    <!-- 좌석 선택 및 신청 버튼 js code -->
+    <script>
+        var seatNum = 0;
+        function apply() {
+            // 창학관 신청
+            if (seatNum != 0) {
+                $.post("/api/apply", {
+                    date: getParameterByName("date"),
+                    period: getParameterByName("period"),
+                    form: "B",
+                    area: "E",
+                    seat: seatNum
+                }, function (data) {
+                    sessionStorage.removeItem('time');
+
+                    if (sessionStorage.times == null) {
+                        location.href = "/apply/applySuccess"
+                    } else {
+                        location.href = "/apply/selectArea"
+                    }
+                    /*
+                    if (data == "success") {
+                        sessionStorage.removeItem('time');
+    
+                        if (sessionStorage.times == null) {
+                            location.href = "/apply/applySuccess"
+                        } else {
+                            location.href = "/apply/selectArea"
+                        }
+                    } else {
+                        // TODO: 에러 메세지 세분화
+                    }*/
+                });
+            } else {
+                alert("좌석을 선택해주세요");
+            }
+        }
+
+        function select(seat) {
+            seatNum = seat;
+        }
+
+        // 뒤로가기 버튼
+        function back() {
+            history.back();
+        }
+    </script>
+
+    [[if (eq .gender 1)]]
+    <script>
+        history.back();
+    </script>
+    [[end]]
+</body>
+
+</html>
+[[end]]

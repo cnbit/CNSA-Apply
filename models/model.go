@@ -322,7 +322,7 @@ func DeleteApply(studentNumber string, day time.Time, period string) error {
 
 	if time.Now().After(studyDay) {
 		// 지금이 면학신청한 시간 이후면 Error 반환
-		return errors.New("It's already over")
+		return errors.New("이미 지난 시간입니다")
 	}
 
 	err := db.Table("applys").Where("student_number = ? AND date = ? AND period = ?", studentNumber, day.Format("2006-01-02"), period).Delete(Apply{}).Error
