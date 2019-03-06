@@ -6,14 +6,14 @@ function GetTimeTableDays() {
 
     if (now.getDay() == 0) {
         // 일요일이면 하루 더함
-        days[0] = new Date(days[0].getTime() + 86400000 * 2);
+        days[0] = new Date(days[0].getTime() + 86400000);
         days[1] = new Date(days[0].getTime() + 86400000);
         days[2] = new Date(days[1].getTime() + 86400000);
         days[3] = new Date(days[2].getTime() + 86400000);
         days[4] = new Date(days[3].getTime() + 86400000);
     } else if (now.getDay() == 6) {
         // 토요일이면 2일 더함
-        days[0] = new Date(days[0].getTime() + 86400000 * 3);
+        days[0] = new Date(days[0].getTime() + 86400000 * 2);
         days[1] = new Date(days[0].getTime() + 86400000);
         days[2] = new Date(days[1].getTime() + 86400000);
         days[3] = new Date(days[2].getTime() + 86400000);
