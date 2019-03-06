@@ -1,7 +1,7 @@
 // 페이지에 표시되는 월~금 날짜를 반환
 function GetTimeTableDays() {
     var days = new Array();
-    var now = new Date();
+    var now = new Date(new Date().getTime() + 32400000);
     days[0] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
     if (now.getDay() == 0) {
