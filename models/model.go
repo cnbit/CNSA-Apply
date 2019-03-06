@@ -308,16 +308,16 @@ func DeleteApply(studentNumber string, day time.Time, period string) error {
 	var studyDay time.Time
 	if period == "7" {
 		// 7교시
-		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 3, 30, 0, 0, time.Local)
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 15, 30, 0, 0, time.Local)
 	} else if period == "CAS" {
 		// CAS
-		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 4, 50, 0, 0, time.Local)
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 16, 50, 0, 0, time.Local)
 	} else if period == "EP1" {
 		// EP1
-		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 7, 20, 0, 0, time.Local)
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 19, 20, 0, 0, time.Local)
 	} else if period == "EP2" {
 		// EP2
-		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 9, 00, 0, 0, time.Local)
+		studyDay = time.Date(day.Year(), day.Month(), day.Day(), 21, 00, 0, 0, time.Local)
 	}
 
 	if time.Now().After(studyDay) {
