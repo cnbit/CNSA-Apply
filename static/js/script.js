@@ -1,26 +1,19 @@
 // 페이지에 표시되는 월~금 날짜를 반환
 function GetTimeTableDays() {
     var days = new Array();
-    var now = new Date(new Date().getTime() + 32400000);
+    var now = new Date();
     days[0] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
     if (now.getDay() == 0) {
         // 일요일이면 하루 더함
-        days[0] = new Date(days[0].getTime() + 86400000);
-        days[1] = new Date(days[0].getTime() + 86400000);
-        days[2] = new Date(days[1].getTime() + 86400000);
-        days[3] = new Date(days[2].getTime() + 86400000);
-        days[4] = new Date(days[3].getTime() + 86400000);
-    } else if (now.getDay() == 6) {
-        // 토요일이면 2일 더함
-        days[0] = new Date(days[0].getTime() + 86400000 * 2);
+        days[0] = new Date(days[0].getTime() - 86400000 * 6);
         days[1] = new Date(days[0].getTime() + 86400000);
         days[2] = new Date(days[1].getTime() + 86400000);
         days[3] = new Date(days[2].getTime() + 86400000);
         days[4] = new Date(days[3].getTime() + 86400000);
     } else {
-        // 월~금이면 1-n(월: 1, 금: 5)일 더함
-        days[0] = new Date(days[0].getTime() + (86400000 * (2 - days[0].getDay())));
+        // 월~토이면 1-n(월: 1, 토: 6)일 더함
+        days[0] = new Date(days[0].getTime() + (86400000 * (1 - days[0].getDay())));
         days[1] = new Date(days[0].getTime() + 86400000);
         days[2] = new Date(days[1].getTime() + 86400000);
         days[3] = new Date(days[2].getTime() + 86400000);
@@ -57,9 +50,9 @@ function getParameterByName(name, url) {
 
 // yyyy-MM-dd 형식으로 포맷하는 함수 추가
 Date.prototype.yyyymmdd = function () {
-    var yyyy = this.getUTCFullYear().toString();
-    var mm = (this.getUTCMonth() + 1).toString();
-    var dd = this.getUTCDate().toString();
+    var yyyy = this.getFullYear().toString();
+    var mm = (this.getMonth() + 1).toString();
+    var dd = this.getDate().toString();
 
     return yyyy + "-" + (mm[1] ? mm : '0' + mm[0]) + "-" + (dd[1] ? dd : '0' + dd[0]);
 }
