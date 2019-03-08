@@ -208,9 +208,9 @@ func AddApply(studentNumber string, name string, gender int, day time.Time, peri
 
 	if err != nil {
 		if err.Error()[:10] == "Error 1062" {
-			if len(err.Error()) == 64 || len(err.Error()) == 62 {
+			if err.Error()[len(err.Error())-5:len(err.Error())-1] == "seat" {
 				err = errors.New("이미 신청된 좌석입니다")
-			} else if len(err.Error()) == 69 || len(err.Error()) == 67 {
+			} else if err.Error()[len(err.Error())-8:len(err.Error())-1] == "PRIMARY" {
 				err = errors.New("이미 신청된 시간입니다")
 			}
 		}
@@ -322,7 +322,7 @@ func DeleteApply(studentNumber string, day time.Time, period string) error {
 
 	if time.Now().After(studyDay) {
 		// 지금이 면학신청한 시간 이후면 Error 반환
-		return errors.New("It's already over")
+		return errors.New("이미 지난 시간입니다")
 	}
 
 	err := db.Table("applys").Where("student_number = ? AND date = ? AND period = ?", studentNumber, day.Format("2006-01-02"), period).Delete(Apply{}).Error
