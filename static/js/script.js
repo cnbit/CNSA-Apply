@@ -5,20 +5,28 @@ function GetTimeTableDays() {
     days[0] = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
 
     if (now.getDay() == 0) {
-        // 일요일이면 하루 더함
+        // 일요일이면 6일 뺌
         days[0] = new Date(days[0].getTime() - 86400000 * 6);
-        days[1] = new Date(days[0].getTime() + 86400000);
-        days[2] = new Date(days[1].getTime() + 86400000);
-        days[3] = new Date(days[2].getTime() + 86400000);
-        days[4] = new Date(days[3].getTime() + 86400000);
+    } else if (now.getDay() == 1) {
+        // 월요일이면 8시 20분 이후인지 검사
+        if (now.getHours() <= 8) {
+            if (now.getHours() == 8) {
+                if (now.getMinutes() < 20) {
+                    days[0] = new Date(days[0].getTime() - (86400000 * 6));
+                }
+            } else {
+                // 8시 전이면 저번주
+                days[0] = new Date(days[0].getTime() - (86400000 * 6));
+            }
+        }
     } else {
-        // 월~토이면 1-n(월: 1, 토: 6)일 더함
+        // 월~토이면 n-1(월: 1, 토: 6)일 뺌
         days[0] = new Date(days[0].getTime() + (86400000 * (1 - days[0].getDay())));
-        days[1] = new Date(days[0].getTime() + 86400000);
-        days[2] = new Date(days[1].getTime() + 86400000);
-        days[3] = new Date(days[2].getTime() + 86400000);
-        days[4] = new Date(days[3].getTime() + 86400000);
     }
+    days[1] = new Date(days[0].getTime() + 86400000);
+    days[2] = new Date(days[1].getTime() + 86400000);
+    days[3] = new Date(days[2].getTime() + 86400000);
+    days[4] = new Date(days[3].getTime() + 86400000);
 
     return days;
 }

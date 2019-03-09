@@ -134,18 +134,23 @@ func TcrLogin(loginID string, loginPW string) bool {
 	return false
 }
 
-// GetTimeTableDays : 페이지에 표시할 5일을 반환
-// 월~금: 금주 월~금을 반환
-// 토~일: 다음주 월~금을 반환
+// GetTimeTableDays : 페이지에 표시할 5일을 반환(금주 월~금)
 func GetTimeTableDays() [5]time.Time {
 	var days [5]time.Time
 	now := time.Now()
 
-	if now.Weekday() > 5 {
-		// 주말일 경우 시작일이 다음주 월요일
-		days[0] = time.Date(now.Year(), now.Month(), now.Day()+(8-int(now.Weekday())), 0, 0, 0, 0, time.Local)
+	if now.Weekday() == 0 {
+		days[0] = time.Date(now.Year(), now.Month(), now.Day()-6, 0, 0, 0, 0, time.Local)
+	} else if now.Weekday() == 1 {
+		// 월요일이면
+		eightTwenty := time.Date(now.Year(), now.Month(), now.Day(), 8, 20, 0, 0, time.Local)
+		if now.Before(eightTwenty) {
+			// 8시 20분 전일 경우 저번주 출력
+			days[0] = time.Date(now.Year(), now.Month(), now.Day()-7, 0, 0, 0, 0, time.Local)
+		} else {
+			days[0] = time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.Local)
+		}
 	} else {
-		// 평일일 경우 시작일이 금주 월요일
 		days[0] = time.Date(now.Year(), now.Month(), now.Day()+(1-int(now.Weekday())), 0, 0, 0, 0, time.Local)
 	}
 	days[1] = days[0].AddDate(0, 0, 1)
