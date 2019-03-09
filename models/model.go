@@ -76,6 +76,19 @@ func (c *Holyday) TableName() string {
 	return "holydays"
 }
 
+// Notice models
+type Notice struct {
+	ID         int       `gorm:"type:INT; primary_key" json:"id"`
+	Name       string    `gorm:"type:VARCHAR(200)" json:"name"`
+	Content    string    `gorm:"type:VARCHAR(2000)" json:"content"`
+	UploadTime time.Time `gorm:"type:TIME" json:"uploadTime"`
+}
+
+// TableName of Notice
+func (c *Notice) TableName() string {
+	return "notices"
+}
+
 // Login 학생 아이디 인증(SALT)
 func Login(studentNumber string, password string) (bool, string, int) {
 	user := User{}
