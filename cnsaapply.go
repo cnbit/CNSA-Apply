@@ -83,7 +83,7 @@ func main() {
 	e.GET("/user/changeSuccess", controller.ChangeSuccess, controller.AuthAPI)
 
 	// 공지사항
-	e.GET("/notice/", controller.Notice, controller.AuthAPI)
+	e.GET("/notice/", controller.Notices, controller.AuthAPI)
 	// ================ 학생 API ================
 	// 신청하기
 	e.POST("/api/apply", controller.ApplyAPI, controller.AuthAPI)
