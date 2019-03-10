@@ -371,3 +371,11 @@ func GetHolydays() []Holyday {
 func DeleteHolyday(holyday time.Time) error {
 	return db.Table("holydays").Where("date = ?", holyday.Format("2006-01-02")).Delete(Holyday{}).Error
 }
+
+// GetNotices 공지를 반환함
+func GetNotices() []Notice {
+	notices := []Notice{}
+	db.Table("notices").Find(&notices)
+
+	return notices
+}

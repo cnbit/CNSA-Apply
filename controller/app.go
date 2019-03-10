@@ -282,3 +282,8 @@ func ChangeSuccess(c echo.Context) error {
 func GetHolydaysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetTimeTableHolydays())
 }
+
+// GetNoticesAPI : 공지 가져오기 API
+func GetNoticesAPI(c echo.Context) error {
+	return c.JSON(http.StatusOK, models.GetNotices())
+}
