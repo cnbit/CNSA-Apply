@@ -283,6 +283,10 @@ func GetHolydaysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetTimeTableHolydays())
 }
 
+func Notice(c echo.Context) error {
+	return c.Render(http.StatusOK, "notice", nil)
+}
+
 // GetNoticesAPI : 공지 가져오기 API
 func GetNoticesAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetNotices())
