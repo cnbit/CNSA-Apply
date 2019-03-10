@@ -101,7 +101,10 @@ func main() {
 	// 공휴일 정보 가져오기
 	e.GET("/api/getHolydays", controller.GetHolydaysAPI, controller.AuthAPI)
 
+	// 공지 가져오기
 	e.GET("/api/getNotices", controller.GetNoticesAPI, controller.AuthAPI)
+	// id 값의 공지 가져오기
+	e.GET("/api/getNoticeByID", controller.GetNoticeByIDAPI, controller.AuthAPI)
 
 	// ================ 교사 페이지 ================
 	// Login Page

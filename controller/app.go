@@ -287,3 +287,9 @@ func GetHolydaysAPI(c echo.Context) error {
 func GetNoticesAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetNotices())
 }
+
+// GetNoticeByIDAPI id 값에 따른 공지 가져오기 API
+func GetNoticeByIDAPI(c echo.Context) error {
+	id, _ := strconv.Atoi(c.QueryParam("id"))
+	return c.JSON(http.StatusOK, models.GetNoticeByID(id))
+}

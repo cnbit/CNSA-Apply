@@ -379,3 +379,10 @@ func GetNotices() []Notice {
 
 	return notices
 }
+
+//GetNoticeByID id 값에 의한 공지 반환
+func GetNoticeByID(id int) Notice {
+	notice := Notice{}
+	db.Table("notices").Where("id = ?", id).First(&notice)
+	return notice
+}
