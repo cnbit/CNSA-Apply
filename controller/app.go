@@ -288,6 +288,11 @@ func Notices(c echo.Context) error {
 	return c.Render(http.StatusOK, "notice", nil)
 }
 
+// NoticeContent : 공지사항 내용 페이지
+func NoticeContent(c echo.Context) error {
+	return c.Render(http.StatusOK, "noticeContent", nil)
+}
+
 // GetNoticesAPI : 공지 가져오기 API
 func GetNoticesAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetNotices())

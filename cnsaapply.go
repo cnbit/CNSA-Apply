@@ -84,6 +84,9 @@ func main() {
 
 	// 공지사항
 	e.GET("/notice/", controller.Notices, controller.AuthAPI)
+	// 공지사항 내용
+	e.GET("/notice/content", controller.NoticeContent, controller.AuthAPI)
+
 	// ================ 학생 API ================
 	// 신청하기
 	e.POST("/api/apply", controller.ApplyAPI, controller.AuthAPI)
