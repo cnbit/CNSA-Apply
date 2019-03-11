@@ -62,7 +62,10 @@ func Logout(c echo.Context) error {
 
 // Index : Main Page
 func Index(c echo.Context) error {
-	return c.Render(http.StatusOK, "index", nil)
+	session := session.Default(c)
+	return c.Render(http.StatusOK, "index", map[string]interface{}{
+		"name": session.Get("name").(string),
+	})
 }
 
 // SelectForm : 신청하기 - 면학실 선택
