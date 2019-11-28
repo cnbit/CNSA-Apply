@@ -62,7 +62,10 @@ func Logout(c echo.Context) error {
 
 // Index : Main Page
 func Index(c echo.Context) error {
-	return c.Render(http.StatusOK, "index", nil)
+	session := session.Default(c)
+	return c.Render(http.StatusOK, "index", map[string]interface{}{
+		"name": session.Get("name").(string),
+	})
 }
 
 // SelectForm : 신청하기 - 면학실 선택
@@ -281,4 +284,25 @@ func ChangeSuccess(c echo.Context) error {
 // GetHolydaysAPI : 공휴일 정보 가져오기 API
 func GetHolydaysAPI(c echo.Context) error {
 	return c.JSON(http.StatusOK, models.GetTimeTableHolydays())
+}
+
+// Notices : 공지사항 페이지
+func Notices(c echo.Context) error {
+	return c.Render(http.StatusOK, "notice", nil)
+}
+
+// NoticeContent : 공지사항 내용 페이지
+func NoticeContent(c echo.Context) error {
+	return c.Render(http.StatusOK, "noticeContent", nil)
+}
+
+// GetNoticesAPI : 공지 가져오기 API
+func GetNoticesAPI(c echo.Context) error {
+	return c.JSON(http.StatusOK, models.GetNotices())
+}
+
+// GetNoticeByIDAPI id 값에 따른 공지 가져오기 API
+func GetNoticeByIDAPI(c echo.Context) error {
+	id, _ := strconv.Atoi(c.QueryParam("id"))
+	return c.JSON(http.StatusOK, models.GetNoticeByID(id))
 }

@@ -76,6 +76,19 @@ func (c *Holyday) TableName() string {
 	return "holydays"
 }
 
+// Notice models
+type Notice struct {
+	ID         int       `gorm:"type:INT; primary_key" json:"id"`
+	Name       string    `gorm:"type:VARCHAR(200)" json:"name"`
+	Content    string    `gorm:"type:VARCHAR(2000)" json:"content"`
+	UploadTime time.Time `gorm:"type:TIME" json:"uploadTime"`
+}
+
+// TableName of Notice
+func (c *Notice) TableName() string {
+	return "notices"
+}
+
 // Login 학생 아이디 인증(SALT)
 func Login(studentNumber string, password string) (bool, string, int) {
 	user := User{}
@@ -357,4 +370,19 @@ func GetHolydays() []Holyday {
 // DeleteHolyday 공휴일을 삭제함
 func DeleteHolyday(holyday time.Time) error {
 	return db.Table("holydays").Where("date = ?", holyday.Format("2006-01-02")).Delete(Holyday{}).Error
+}
+
+// GetNotices 공지를 반환함
+func GetNotices() []Notice {
+	notices := []Notice{}
+	db.Table("notices").Find(&notices)
+
+	return notices
+}
+
+//GetNoticeByID id 값에 의한 공지 반환
+func GetNoticeByID(id int) Notice {
+	notice := Notice{}
+	db.Table("notices").Where("id = ?", id).First(&notice)
+	return notice
 }
